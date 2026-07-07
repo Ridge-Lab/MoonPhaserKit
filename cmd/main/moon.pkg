@@ -1,0 +1,8 @@
+import {
+  "moonphaserkit/moonphaserkit",
+}
+
+options(
+  "is-main": true,
+  targets: { "main.mbt": [ "js" ] },
+)
