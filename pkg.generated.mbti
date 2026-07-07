@@ -10,6 +10,53 @@ import {
 // Errors
 
 // Types and methods
+pub(all) struct AnimationConfig {
+  key : String
+  texture_key : String
+  frames : FrameRange
+  frame_rate : Int
+  repeat_mode : AnimationRepeatMode
+  repeat_count : Int
+  yoyo : Bool
+  delay_ms : Int
+} derive(Eq, @debug.Debug)
+pub fn AnimationConfig::is_valid(Self) -> Bool
+pub fn AnimationConfig::loops_forever(Self) -> Bool
+pub fn AnimationConfig::new(String, String, FrameRange, frame_rate? : Int, repeat_mode? : AnimationRepeatMode, repeat_count? : Int, yoyo? : Bool, delay_ms? : Int) -> Self
+pub fn AnimationConfig::phaser_repeat(Self) -> Int
+pub fn AnimationConfig::plays_once(Self) -> Bool
+
+pub(all) enum AnimationDirection {
+  AnimForward
+  AnimReverse
+} derive(Eq, @debug.Debug)
+pub fn AnimationDirection::is_reverse(Self) -> Bool
+
+pub(all) struct AnimationPlayOptions {
+  ignore_if_playing : Bool
+  start_frame : Int
+  delay_ms : Int
+  repeat_override : Int
+} derive(Eq, @debug.Debug)
+pub fn AnimationPlayOptions::is_valid(Self) -> Bool
+pub fn AnimationPlayOptions::new(ignore_if_playing? : Bool, start_frame? : Int, delay_ms? : Int, repeat_override? : Int) -> Self
+
+pub(all) enum AnimationRepeatMode {
+  AnimRepeatOnce
+  AnimRepeatForever
+  AnimRepeatFixed
+} derive(Eq, @debug.Debug)
+pub fn AnimationRepeatMode::to_repeat_count(Self, fixed_count? : Int) -> Int
+
+pub(all) struct AnimationStateSnapshot {
+  key : String
+  is_playing : Bool
+  progress : Double
+  frame_index : Int
+} derive(Eq, @debug.Debug)
+pub fn AnimationStateSnapshot::is_valid(Self) -> Bool
+pub fn AnimationStateSnapshot::new(String, Bool, Double, Int) -> Self
+
 #external
 pub type ArcadeBody
 pub fn ArcadeBody::set_bounce(Self, Double, Double) -> Unit
@@ -21,8 +68,217 @@ pub fn ArcadeBody::set_velocity_x(Self, Double) -> Unit
 pub fn ArcadeBody::set_velocity_y(Self, Double) -> Unit
 pub fn ArcadeBody::touching_down(Self) -> Bool
 
+pub(all) struct AssetGroup {
+  name : String
+  base_path : String
+} derive(Eq, @debug.Debug)
+pub fn AssetGroup::is_valid(Self) -> Bool
+pub fn AssetGroup::new(String, String) -> Self
+pub fn AssetGroup::resolve(Self, String) -> String
+
+pub(all) enum AssetKind {
+  AssetImage
+  AssetSpriteSheet
+  AssetAtlas
+  AssetAudio
+  AssetTilemapJson
+  AssetBitmapFont
+} derive(Eq, @debug.Debug)
+pub fn AssetKind::label(Self) -> String
+
+pub(all) struct AssetManifestEntry {
+  kind : AssetKind
+  key : String
+  primary_path : String
+  secondary_path : String
+} derive(Eq, @debug.Debug)
+pub fn AssetManifestEntry::is_complete(Self) -> Bool
+pub fn AssetManifestEntry::is_valid(Self) -> Bool
+pub fn AssetManifestEntry::new(AssetKind, String, String, secondary_path? : String) -> Self
+pub fn AssetManifestEntry::requires_secondary_path(Self) -> Bool
+pub fn AssetManifestEntry::secondary_path_is_valid(Self) -> Bool
+
+pub(all) struct AudioAsset {
+  key : String
+  path : String
+} derive(Eq, @debug.Debug)
+pub fn AudioAsset::is_valid(Self) -> Bool
+pub fn AudioAsset::new(String, String) -> Self
+
+pub(all) enum AudioBusKind {
+  BusMaster
+  BusMusic
+  BusEffects
+  BusUi
+  BusVoice
+} derive(Eq, @debug.Debug)
+pub fn AudioBusKind::label(Self) -> String
+
+pub(all) struct AudioBusState {
+  kind : AudioBusKind
+  volume : Double
+  muted : Bool
+} derive(Eq, @debug.Debug)
+pub fn AudioBusState::effective_volume(Self) -> Double
+pub fn AudioBusState::is_valid(Self) -> Bool
+pub fn AudioBusState::new(AudioBusKind, volume? : Double, muted? : Bool) -> Self
+
+pub(all) struct AudioFade {
+  from_volume : Double
+  to_volume : Double
+  duration_ms : Int
+} derive(Eq, @debug.Debug)
+pub fn AudioFade::is_valid(Self) -> Bool
+pub fn AudioFade::new(Double, Double, Int) -> Self
+
+pub(all) struct BitmapFontAsset {
+  key : String
+  texture_path : String
+  data_path : String
+} derive(Eq, @debug.Debug)
+pub fn BitmapFontAsset::is_valid(Self) -> Bool
+pub fn BitmapFontAsset::new(String, String, String) -> Self
+
+pub(all) struct BrowserSmokeScenario {
+  name : String
+  viewport : BrowserViewport
+  canvas : CanvasExpectation
+  initial_wait_ms : Int
+  fail_on_console_error : Bool
+  fail_on_http_error : Bool
+} derive(Eq, @debug.Debug)
+pub fn BrowserSmokeScenario::desktop_default() -> Self
+pub fn BrowserSmokeScenario::is_valid(Self) -> Bool
+pub fn BrowserSmokeScenario::mobile_default() -> Self
+pub fn BrowserSmokeScenario::new(String, BrowserViewport, canvas? : CanvasExpectation, initial_wait_ms? : Int, fail_on_console_error? : Bool, fail_on_http_error? : Bool) -> Self
+
+pub(all) enum BrowserTarget {
+  BrowserChromium
+  BrowserFirefox
+  BrowserSafari
+  BrowserEdge
+  BrowserUnknown
+} derive(Eq, @debug.Debug)
+pub fn BrowserTarget::label(Self) -> String
+pub fn BrowserTarget::supports_audio_unlock(Self) -> Bool
+
+pub(all) struct BrowserViewport {
+  kind : BrowserViewportKind
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn BrowserViewport::desktop() -> Self
+pub fn BrowserViewport::is_valid(Self) -> Bool
+pub fn BrowserViewport::mobile() -> Self
+pub fn BrowserViewport::new(BrowserViewportKind, Int, Int) -> Self
+
+pub(all) enum BrowserViewportKind {
+  ViewportDesktop
+  ViewportTablet
+  ViewportMobile
+} derive(Eq, @debug.Debug)
+pub fn BrowserViewportKind::label(Self) -> String
+
+#external
+pub type Camera
+pub fn Camera::center_on(Self, Point2) -> Unit
+pub fn Camera::fade_in(Self, options? : CameraFadeOptions) -> Unit
+pub fn Camera::fade_out(Self, options? : CameraFadeOptions) -> Unit
+pub fn Camera::pan(Self, CameraPanOptions) -> Unit
+pub fn Camera::set_bounds(Self, CameraBounds) -> Unit
+pub fn Camera::set_zoom(Self, Double) -> Unit
+pub fn Camera::shake(Self, options? : CameraShakeOptions) -> Unit
+pub fn Camera::start_follow(Self, Sprite, options? : CameraFollowOptions) -> Unit
+pub fn Camera::stop_follow(Self) -> Unit
+pub fn Camera::zoom_to(Self, CameraZoomOptions) -> Unit
+
+pub(all) struct CameraBounds {
+  x : Double
+  y : Double
+  width : Double
+  height : Double
+} derive(Eq, @debug.Debug)
+pub fn CameraBounds::as_rect(Self) -> Rect
+pub fn CameraBounds::from_rect(Rect) -> Self
+pub fn CameraBounds::is_valid(Self) -> Bool
+pub fn CameraBounds::new(Double, Double, Double, Double) -> Self
+
+pub(all) struct CameraFadeOptions {
+  duration_ms : Int
+  red : Int
+  green : Int
+  blue : Int
+  force : Bool
+} derive(Eq, @debug.Debug)
+pub fn CameraFadeOptions::is_valid(Self) -> Bool
+pub fn CameraFadeOptions::new(duration_ms? : Int, red? : Int, green? : Int, blue? : Int, force? : Bool) -> Self
+
+pub(all) struct CameraFollowOptions {
+  lerp_x : Double
+  lerp_y : Double
+  offset_x : Double
+  offset_y : Double
+  deadzone_width : Double
+  deadzone_height : Double
+} derive(Eq, @debug.Debug)
+pub fn CameraFollowOptions::is_valid(Self) -> Bool
+pub fn CameraFollowOptions::new(lerp_x? : Double, lerp_y? : Double, offset_x? : Double, offset_y? : Double, deadzone_width? : Double, deadzone_height? : Double) -> Self
+
+pub(all) struct CameraPanOptions {
+  target : Point2
+  duration_ms : Int
+  ease : EaseKind
+  force : Bool
+} derive(Eq, @debug.Debug)
+pub fn CameraPanOptions::is_valid(Self) -> Bool
+pub fn CameraPanOptions::new(Point2, duration_ms? : Int, ease? : EaseKind, force? : Bool) -> Self
+
+pub(all) struct CameraShakeOptions {
+  duration_ms : Int
+  intensity : Double
+  force : Bool
+} derive(Eq, @debug.Debug)
+pub fn CameraShakeOptions::is_valid(Self) -> Bool
+pub fn CameraShakeOptions::new(duration_ms? : Int, intensity? : Double, force? : Bool) -> Self
+
+pub(all) struct CameraViewport {
+  x : Int
+  y : Int
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn CameraViewport::is_valid(Self) -> Bool
+pub fn CameraViewport::new(Int, Int, Int, Int) -> Self
+pub fn CameraViewport::size(Self) -> Size2
+
+pub(all) struct CameraZoomOptions {
+  zoom : Double
+  duration_ms : Int
+  ease : EaseKind
+} derive(Eq, @debug.Debug)
+pub fn CameraZoomOptions::is_valid(Self) -> Bool
+pub fn CameraZoomOptions::new(Double, duration_ms? : Int, ease? : EaseKind) -> Self
+
+pub(all) struct CanvasExpectation {
+  min_width : Int
+  min_height : Int
+  allow_mobile_fit : Bool
+  require_non_blank : Bool
+} derive(Eq, @debug.Debug)
+pub fn CanvasExpectation::is_valid(Self) -> Bool
+pub fn CanvasExpectation::new(min_width? : Int, min_height? : Int, allow_mobile_fit? : Bool, require_non_blank? : Bool) -> Self
+
 #external
 pub type Collider
+
+pub(all) struct CssColor {
+  value : String
+} derive(Eq, @debug.Debug)
+pub fn CssColor::as_string(Self) -> String
+pub fn CssColor::black() -> Self
+pub fn CssColor::is_valid(Self) -> Bool
+pub fn CssColor::new(String) -> Self
+pub fn CssColor::white() -> Self
 
 pub(all) enum CursorDirection {
   Left
@@ -36,10 +292,121 @@ pub fn CursorDirection::to_key_name(Self) -> String
 pub type CursorKeys
 pub fn CursorKeys::key(Self, CursorDirection) -> Key
 
+pub(all) struct DisplayObjectOptions {
+  position : Point2
+  origin : OriginPoint
+  scale_x : Double
+  scale_y : Double
+  rotation : Double
+  alpha : Double
+  depth : Int
+  visible : Bool
+  active : Bool
+} derive(Eq, @debug.Debug)
+pub fn DisplayObjectOptions::hidden(Self) -> Self
+pub fn DisplayObjectOptions::is_valid(Self) -> Bool
+pub fn DisplayObjectOptions::new(position? : Point2, origin? : OriginPoint, scale_x? : Double, scale_y? : Double, rotation? : Double, alpha? : Double, depth? : Int, visible? : Bool, active? : Bool) -> Self
+
+pub(all) enum DisplayOrigin {
+  OriginTopLeft
+  OriginCenter
+  OriginBottomCenter
+  OriginCustom
+} derive(Eq, @debug.Debug)
+pub fn DisplayOrigin::label(Self) -> String
+
+pub(all) struct DurationMs {
+  value : Int
+} derive(Eq, @debug.Debug)
+pub fn DurationMs::is_positive(Self) -> Bool
+pub fn DurationMs::is_valid(Self) -> Bool
+pub fn DurationMs::max(Self, Self) -> Self
+pub fn DurationMs::new(Int) -> Self
+pub fn DurationMs::plus(Self, Self) -> Self
+pub fn DurationMs::seconds(Int) -> Self
+pub fn DurationMs::zero() -> Self
+
+pub(all) enum EaseKind {
+  EaseLinear
+  EaseQuadIn
+  EaseQuadOut
+  EaseQuadInOut
+  EaseCubicIn
+  EaseCubicOut
+  EaseSineInOut
+  EaseBackOut
+  EaseBounceOut
+} derive(Eq, @debug.Debug)
+pub fn EaseKind::to_phaser_name(Self) -> String
+
+pub(all) struct ErrorPathExpectation {
+  kind : ErrorPathKind
+  operation : String
+  expected_message : String
+} derive(Eq, @debug.Debug)
+pub fn ErrorPathExpectation::is_valid(Self) -> Bool
+pub fn ErrorPathExpectation::new(ErrorPathKind, String, String) -> Self
+
+pub(all) enum ErrorPathKind {
+  ErrorMissingPhaser
+  ErrorInvalidConfig
+  ErrorMissingAsset
+  ErrorBadAnimation
+  ErrorAudioNotUnlocked
+  ErrorTilemapLayerMissing
+} derive(Eq, @debug.Debug)
+pub fn ErrorPathKind::label(Self) -> String
+
+pub(all) struct FeatureSupport {
+  feature : RuntimeFeature
+  supported : Bool
+  notes : String
+} derive(Eq, @debug.Debug)
+pub fn FeatureSupport::is_complete(Self) -> Bool
+pub fn FeatureSupport::new(RuntimeFeature, Bool, notes? : String) -> Self
+
+pub(all) struct FfiCallRecord {
+  feature : RuntimeFeature
+  operation : String
+  success : Bool
+  failure_code : String
+} derive(Eq, @debug.Debug)
+pub fn FfiCallRecord::failed(Self) -> Bool
+pub fn FfiCallRecord::is_valid(Self) -> Bool
+pub fn FfiCallRecord::new(RuntimeFeature, String, Bool, failure_code? : String) -> Self
+
+pub(all) enum FfiFailureKind {
+  FfiMissingPhaser
+  FfiMissingPlugin
+  FfiInvalidAsset
+  FfiInvalidConfig
+  FfiRuntimeException
+} derive(Eq, @debug.Debug)
+pub fn FfiFailureKind::code(Self) -> String
+
+pub(all) struct FrameRange {
+  start : Int
+  end : Int
+} derive(Eq, @debug.Debug)
+pub fn FrameRange::count(Self) -> Int
+pub fn FrameRange::is_valid(Self) -> Bool
+pub fn FrameRange::new(Int, Int) -> Self
+pub fn FrameRange::single(Int) -> Self
+
 #external
 pub type Game
 pub fn Game::create(GameConfig, (Scene) -> Unit, (Scene) -> Unit, (Scene) -> Unit) -> Self
 pub fn Game::destroy(Self) -> Unit
+
+pub(all) enum GameAction {
+  ActionMoveLeft
+  ActionMoveRight
+  ActionJump
+  ActionInteract
+  ActionPause
+  ActionRestart
+} derive(Eq, @debug.Debug)
+pub fn GameAction::label(Self) -> String
 
 pub(all) struct GameConfig {
   parent : String
@@ -59,30 +426,376 @@ pub(all) struct ImageAsset {
 pub fn ImageAsset::is_valid(Self) -> Bool
 pub fn ImageAsset::new(String, String) -> Self
 
+pub(all) struct IntegrationChecklist {
+  has_moonbit : Bool
+  has_node : Bool
+  has_phaser : Bool
+  exposes_global_phaser : Bool
+  builds_generated_js : Bool
+  imports_generated_js : Bool
+  smoke_test_passes : Bool
+} derive(Eq, @debug.Debug)
+pub fn IntegrationChecklist::complete() -> Self
+pub fn IntegrationChecklist::is_demo_ready(Self) -> Bool
+pub fn IntegrationChecklist::is_release_ready(Self) -> Bool
+pub fn IntegrationChecklist::new(has_moonbit? : Bool, has_node? : Bool, has_phaser? : Bool, exposes_global_phaser? : Bool, builds_generated_js? : Bool, imports_generated_js? : Bool, smoke_test_passes? : Bool) -> Self
+
+pub(all) struct IntegrationStep {
+  kind : IntegrationStepKind
+  title : String
+  required_for_demo : Bool
+  required_for_package : Bool
+} derive(Eq, @debug.Debug)
+pub fn IntegrationStep::for_package_publish() -> Self
+pub fn IntegrationStep::is_valid(Self) -> Bool
+pub fn IntegrationStep::new(IntegrationStepKind, String, required_for_demo? : Bool, required_for_package? : Bool) -> Self
+
+pub(all) enum IntegrationStepKind {
+  IntegrationInstallMoonBit
+  IntegrationInstallNode
+  IntegrationInstallPhaser
+  IntegrationExposeGlobalPhaser
+  IntegrationBuildMoonBitJs
+  IntegrationImportGeneratedJs
+  IntegrationRunSmokeTest
+  IntegrationPublishMooncakes
+} derive(Eq, @debug.Debug)
+pub fn IntegrationStepKind::label(Self) -> String
+
+pub(all) struct InteractionScenarioSummary {
+  name : String
+  step_count : Int
+  covers_keyboard : Bool
+  covers_pointer : Bool
+  covers_collision : Bool
+  covers_audio : Bool
+  covers_camera : Bool
+} derive(Eq, @debug.Debug)
+pub fn InteractionScenarioSummary::coverage_score(Self) -> Int
+pub fn InteractionScenarioSummary::is_valid(Self) -> Bool
+pub fn InteractionScenarioSummary::new(String, Int, covers_keyboard? : Bool, covers_pointer? : Bool, covers_collision? : Bool, covers_audio? : Bool, covers_camera? : Bool) -> Self
+
+pub(all) struct InteractionStep {
+  kind : InteractionStepKind
+  value : String
+  point : Point2
+  duration_ms : Int
+} derive(Eq, @debug.Debug)
+pub fn InteractionStep::is_valid(Self) -> Bool
+pub fn InteractionStep::new(InteractionStepKind, value? : String, point? : Point2, duration_ms? : Int) -> Self
+pub fn InteractionStep::press_key(String) -> Self
+pub fn InteractionStep::tap(Point2) -> Self
+pub fn InteractionStep::wait(Int) -> Self
+
+pub(all) enum InteractionStepKind {
+  StepWait
+  StepPressKey
+  StepReleaseKey
+  StepTap
+  StepDrag
+  StepAssertCanvas
+  StepAssertText
+  StepAssertNoErrors
+} derive(Eq, @debug.Debug)
+pub fn InteractionStepKind::label(Self) -> String
+
 #external
 pub type Key
 pub fn Key::is_down(Self) -> Bool
 pub fn Key::is_up(Self) -> Bool
 
+pub(all) struct KeyBinding {
+  action : GameAction
+  key_code : String
+} derive(Eq, @debug.Debug)
+pub fn KeyBinding::is_valid(Self) -> Bool
+pub fn KeyBinding::new(GameAction, String) -> Self
+
+pub(all) enum MoonBitBackend {
+  BackendJavaScript
+  BackendWasm
+  BackendNative
+} derive(Eq, @debug.Debug)
+pub fn MoonBitBackend::is_supported(Self) -> Bool
+pub fn MoonBitBackend::label(Self) -> String
+
+pub(all) enum ObjectLifecycleState {
+  ObjectCreated
+  ObjectActive
+  ObjectPaused
+  ObjectDestroyed
+} derive(Eq, @debug.Debug)
+pub fn ObjectLifecycleState::can_destroy(Self) -> Bool
+pub fn ObjectLifecycleState::can_update(Self) -> Bool
+
+pub(all) struct OriginPoint {
+  kind : DisplayOrigin
+  x : Double
+  y : Double
+} derive(Eq, @debug.Debug)
+pub fn OriginPoint::center() -> Self
+pub fn OriginPoint::custom(Double, Double) -> Self
+pub fn OriginPoint::is_valid(Self) -> Bool
+pub fn OriginPoint::top_left() -> Self
+
+pub(all) enum PackagePublicationState {
+  PackageUnpublished
+  PackagePendingAccount
+  PackagePublished
+} derive(Eq, @debug.Debug)
+pub fn PackagePublicationState::label(Self) -> String
+pub fn PackagePublicationState::matches_readme(Self) -> Bool
+
+pub(all) struct PhaserVersion {
+  major : Int
+  minor : Int
+  patch : Int
+} derive(Eq, @debug.Debug)
+pub fn PhaserVersion::is_phaser3(Self) -> Bool
+pub fn PhaserVersion::is_supported(Self) -> Bool
+pub fn PhaserVersion::is_valid(Self) -> Bool
+pub fn PhaserVersion::new(Int, Int, Int) -> Self
+pub fn PhaserVersion::pinned() -> Self
+pub fn PhaserVersion::to_string(Self) -> String
+
+pub(all) struct PhysicsMaterial {
+  kind : PhysicsMaterialKind
+  bounce_x : Double
+  bounce_y : Double
+  gravity_y : Double
+  immovable : Bool
+  sensor : Bool
+} derive(Eq, @debug.Debug)
+pub fn PhysicsMaterial::is_valid(Self) -> Bool
+pub fn PhysicsMaterial::new(kind? : PhysicsMaterialKind, bounce_x? : Double, bounce_y? : Double, gravity_y? : Double, immovable? : Bool, sensor? : Bool) -> Self
+pub fn PhysicsMaterial::pickup() -> Self
+pub fn PhysicsMaterial::platform() -> Self
+pub fn PhysicsMaterial::to_sprite_options(Self) -> SpriteOptions
+
+pub(all) enum PhysicsMaterialKind {
+  MaterialDefault
+  MaterialBouncy
+  MaterialIce
+  MaterialHeavy
+  MaterialSensor
+} derive(Eq, @debug.Debug)
+pub fn PhysicsMaterialKind::label(Self) -> String
+
+pub(all) struct Point2 {
+  x : Double
+  y : Double
+} derive(Eq, @debug.Debug)
+pub fn Point2::distance_squared_to(Self, Self) -> Double
+pub fn Point2::new(Double, Double) -> Self
+pub fn Point2::scale(Self, Double) -> Self
+pub fn Point2::translate(Self, Self) -> Self
+pub fn Point2::with_x(Self, Double) -> Self
+pub fn Point2::with_y(Self, Double) -> Self
+pub fn Point2::zero() -> Self
+
+#external
+pub type Pointer
+pub fn Pointer::is_down(Self) -> Bool
+pub fn Pointer::just_down(Self) -> Bool
+pub fn Pointer::world_x(Self) -> Double
+pub fn Pointer::world_y(Self) -> Double
+pub fn Pointer::x(Self) -> Double
+pub fn Pointer::y(Self) -> Double
+
+pub(all) enum PointerButton {
+  PointerPrimary
+  PointerMiddle
+  PointerSecondary
+  PointerBack
+  PointerForward
+} derive(Eq, @debug.Debug)
+pub fn PointerButton::button_index(Self) -> Int
+
+pub(all) struct PointerSnapshot {
+  id : Int
+  position : Point2
+  world_position : Point2
+  is_down : Bool
+  just_down : Bool
+  button : PointerButton
+} derive(Eq, @debug.Debug)
+pub fn PointerSnapshot::is_valid(Self) -> Bool
+pub fn PointerSnapshot::new(Int, Point2, Point2, Bool, Bool, button? : PointerButton) -> Self
+pub fn PointerSnapshot::screen_x(Self) -> Double
+pub fn PointerSnapshot::screen_y(Self) -> Double
+
+pub(all) struct Rect {
+  x : Double
+  y : Double
+  width : Double
+  height : Double
+} derive(Eq, @debug.Debug)
+pub fn Rect::bottom(Self) -> Double
+pub fn Rect::center(Self) -> Point2
+pub fn Rect::contains(Self, Point2) -> Bool
+pub fn Rect::from_size(Size2) -> Self
+pub fn Rect::inflate(Self, Double) -> Self
+pub fn Rect::intersects(Self, Self) -> Bool
+pub fn Rect::is_valid(Self) -> Bool
+pub fn Rect::left(Self) -> Double
+pub fn Rect::move_to(Self, Point2) -> Self
+pub fn Rect::new(Double, Double, Double, Double) -> Self
+pub fn Rect::right(Self) -> Double
+pub fn Rect::top(Self) -> Double
+pub fn Rect::translate(Self, Point2) -> Self
+
+pub(all) struct RuntimeCompatibility {
+  backend : MoonBitBackend
+  phaser : PhaserVersion
+  browser : BrowserTarget
+  requires_global_phaser : Bool
+} derive(Eq, @debug.Debug)
+pub fn RuntimeCompatibility::is_supported(Self) -> Bool
+pub fn RuntimeCompatibility::new(backend? : MoonBitBackend, phaser? : PhaserVersion, browser? : BrowserTarget, requires_global_phaser? : Bool) -> Self
+pub fn RuntimeCompatibility::support_summary(Self) -> String
+
+pub(all) enum RuntimeFeature {
+  FeatureGame
+  FeatureScene
+  FeatureSprite
+  FeaturePhysics
+  FeatureAnimation
+  FeatureAudio
+  FeatureCamera
+  FeatureTilemap
+  FeaturePointer
+} derive(Eq, @debug.Debug)
+pub fn RuntimeFeature::label(Self) -> String
+
 #external
 pub type Scene
+pub fn Scene::active_pointer(Self) -> Pointer
 pub fn Scene::add_collider(Self, Sprite, Sprite) -> Collider
+pub fn Scene::add_key(Self, String) -> Key
 pub fn Scene::add_overlap(Self, Sprite, Sprite, (Sprite, Sprite) -> Unit) -> Collider
+pub fn Scene::add_sound(Self, String, options? : SoundOptions) -> Sound
 pub fn Scene::add_sprite(Self, Double, Double, String) -> Sprite
 pub fn Scene::add_static_sprite(Self, Double, Double, String) -> Sprite
 pub fn Scene::add_text(Self, Double, Double, String, size? : Int, color? : String) -> Text
+pub fn Scene::create_animation(Self, AnimationConfig) -> Unit
 pub fn Scene::cursor_keys(Self) -> CursorKeys
+pub fn Scene::load_atlas(Self, TextureAtlasAsset) -> Unit
+pub fn Scene::load_audio(Self, AudioAsset) -> Unit
 pub fn Scene::load_image(Self, ImageAsset) -> Unit
+pub fn Scene::load_spritesheet(Self, SpriteSheetAsset) -> Unit
+pub fn Scene::load_tilemap_json(Self, TilemapJsonAsset) -> Unit
+pub fn Scene::main_camera(Self) -> Camera
+pub fn Scene::make_tilemap(Self, TilemapConfig) -> Tilemap
+pub fn Scene::on_pointer_down(Self, (Pointer) -> Unit) -> Unit
+pub fn Scene::on_pointer_move(Self, (Pointer) -> Unit) -> Unit
+pub fn Scene::on_pointer_up(Self, (Pointer) -> Unit) -> Unit
 pub fn Scene::restart(Self) -> Unit
+
+pub(all) struct SceneLayerConfig {
+  kind : SceneLayerKind
+  name : String
+  depth : Int
+  scroll_factor_x : Double
+  scroll_factor_y : Double
+  visible : Bool
+} derive(Eq, @debug.Debug)
+pub fn SceneLayerConfig::is_valid(Self) -> Bool
+pub fn SceneLayerConfig::new(SceneLayerKind, name? : String, depth? : Int, scroll_factor_x? : Double, scroll_factor_y? : Double, visible? : Bool) -> Self
+
+pub(all) enum SceneLayerKind {
+  LayerBackground
+  LayerWorld
+  LayerActors
+  LayerEffects
+  LayerUi
+} derive(Eq, @debug.Debug)
+pub fn SceneLayerKind::default_depth(Self) -> Int
+pub fn SceneLayerKind::label(Self) -> String
+
+pub(all) struct SceneTransition {
+  from_scene : String
+  to_scene : String
+  fade : CameraFadeOptions
+  restart_current : Bool
+} derive(Eq, @debug.Debug)
+pub fn SceneTransition::is_valid(Self) -> Bool
+pub fn SceneTransition::new(String, String, fade? : CameraFadeOptions, restart_current? : Bool) -> Self
+
+pub(all) struct Size2 {
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn Size2::area(Self) -> Int
+pub fn Size2::is_landscape(Self) -> Bool
+pub fn Size2::is_portrait(Self) -> Bool
+pub fn Size2::is_valid(Self) -> Bool
+pub fn Size2::new(Int, Int) -> Self
+pub fn Size2::with_height(Self, Int) -> Self
+pub fn Size2::with_width(Self, Int) -> Self
+
+#external
+pub type Sound
+pub fn Sound::destroy(Self) -> Unit
+pub fn Sound::pause(Self) -> Unit
+pub fn Sound::play(Self) -> Unit
+pub fn Sound::resume_playback(Self) -> Unit
+pub fn Sound::set_mute(Self, Bool) -> Unit
+pub fn Sound::set_volume(Self, Double) -> Unit
+pub fn Sound::stop(Self) -> Unit
+
+pub(all) enum SoundLoopMode {
+  SoundPlayOnce
+  SoundLoop
+} derive(Eq, @debug.Debug)
+pub fn SoundLoopMode::as_bool(Self) -> Bool
+
+pub(all) struct SoundMarker {
+  name : String
+  start : Double
+  duration : Double
+  config : SoundOptions
+} derive(Eq, @debug.Debug)
+pub fn SoundMarker::is_valid(Self) -> Bool
+pub fn SoundMarker::new(String, Double, Double, config? : SoundOptions) -> Self
+
+pub(all) struct SoundOptions {
+  volume : Double
+  rate : Double
+  detune : Int
+  seek : Double
+  delay_ms : Int
+  loop_mode : SoundLoopMode
+} derive(Eq, @debug.Debug)
+pub fn SoundOptions::is_valid(Self) -> Bool
+pub fn SoundOptions::muted() -> Self
+pub fn SoundOptions::new(volume? : Double, rate? : Double, detune? : Int, seek? : Double, delay_ms? : Int, loop_mode? : SoundLoopMode) -> Self
+pub fn SoundOptions::should_loop(Self) -> Bool
+
+pub(all) struct SpawnSpec {
+  key : String
+  position : Point2
+  display : DisplayObjectOptions
+  physics : PhysicsMaterial
+  layer : SceneLayerKind
+} derive(Eq, @debug.Debug)
+pub fn SpawnSpec::is_valid(Self) -> Bool
+pub fn SpawnSpec::new(String, Point2, display? : DisplayObjectOptions, physics? : PhysicsMaterial, layer? : SceneLayerKind) -> Self
+pub fn SpawnSpec::with_layer(Self, SceneLayerKind) -> Self
 
 #external
 pub type Sprite
 pub fn Sprite::apply_options(Self, SpriteOptions) -> Unit
 pub fn Sprite::body(Self) -> ArcadeBody
 pub fn Sprite::destroy(Self) -> Unit
+pub fn Sprite::play_animation(Self, String, ignore_if_playing? : Bool) -> Unit
 pub fn Sprite::set_active(Self, Bool) -> Unit
+pub fn Sprite::set_alpha(Self, Double) -> Unit
+pub fn Sprite::set_depth(Self, Int) -> Unit
+pub fn Sprite::set_flip_x(Self, Bool) -> Unit
+pub fn Sprite::set_position(Self, Point2) -> Unit
 pub fn Sprite::set_scale(Self, Double) -> Unit
 pub fn Sprite::set_visible(Self, Bool) -> Unit
+pub fn Sprite::stop_animation(Self) -> Unit
 
 pub(all) struct SpriteOptions {
   scale : Double
@@ -94,9 +807,214 @@ pub(all) struct SpriteOptions {
 } derive(Eq, @debug.Debug)
 pub fn SpriteOptions::new(scale? : Double, immovable? : Bool, collide_world_bounds? : Bool, bounce_x? : Double, bounce_y? : Double, gravity_y? : Double) -> Self
 
+pub(all) struct SpriteSheetAsset {
+  key : String
+  path : String
+  frame_width : Int
+  frame_height : Int
+  margin : Int
+  spacing : Int
+} derive(Eq, @debug.Debug)
+pub fn SpriteSheetAsset::frame_size(Self) -> Size2
+pub fn SpriteSheetAsset::is_valid(Self) -> Bool
+pub fn SpriteSheetAsset::new(String, String, Int, Int, margin? : Int, spacing? : Int) -> Self
+
+pub(all) struct SpriteTween {
+  from : Point2
+  to : Point2
+  alpha_from : Double
+  alpha_to : Double
+  scale_from : Double
+  scale_to : Double
+  config : TweenConfig
+} derive(Eq, @debug.Debug)
+pub fn SpriteTween::is_valid(Self) -> Bool
+pub fn SpriteTween::new(Point2, Point2, alpha_from? : Double, alpha_to? : Double, scale_from? : Double, scale_to? : Double, config? : TweenConfig) -> Self
+
+pub(all) struct SwipeConfig {
+  threshold : Double
+  max_duration_ms : Int
+} derive(Eq, @debug.Debug)
+pub fn SwipeConfig::is_valid(Self) -> Bool
+pub fn SwipeConfig::new(threshold? : Double, max_duration_ms? : Int) -> Self
+
+pub(all) enum SwipeDirection {
+  SwipeLeft
+  SwipeRight
+  SwipeUp
+  SwipeDown
+  SwipeNone
+} derive(Eq, @debug.Debug)
+pub fn SwipeDirection::to_key_name(Self) -> String
+
+pub(all) struct SwipeSnapshot {
+  start : Point2
+  current : Point2
+  elapsed_ms : Int
+  config : SwipeConfig
+} derive(Eq, @debug.Debug)
+pub fn SwipeSnapshot::delta(Self) -> Point2
+pub fn SwipeSnapshot::direction(Self) -> SwipeDirection
+pub fn SwipeSnapshot::is_fast_enough(Self) -> Bool
+pub fn SwipeSnapshot::is_valid(Self) -> Bool
+pub fn SwipeSnapshot::new(Point2, Point2, Int, config? : SwipeConfig) -> Self
+
 #external
 pub type Text
 pub fn Text::set_text(Self, String) -> Unit
+
+pub(all) struct TextureAsset {
+  key : String
+  path : String
+} derive(Eq, @debug.Debug)
+pub fn TextureAsset::from_image(ImageAsset) -> Self
+pub fn TextureAsset::is_valid(Self) -> Bool
+pub fn TextureAsset::new(String, String) -> Self
+
+pub(all) struct TextureAtlasAsset {
+  key : String
+  texture_path : String
+  atlas_path : String
+} derive(Eq, @debug.Debug)
+pub fn TextureAtlasAsset::is_valid(Self) -> Bool
+pub fn TextureAtlasAsset::new(String, String, String) -> Self
+
+pub(all) struct TileCollisionRange {
+  start_index : Int
+  end_index : Int
+  collides : Bool
+} derive(Eq, @debug.Debug)
+pub fn TileCollisionRange::is_valid(Self) -> Bool
+pub fn TileCollisionRange::new(Int, Int, collides? : Bool) -> Self
+
+#external
+pub type TileLayer
+pub fn TileLayer::destroy(Self) -> Unit
+pub fn TileLayer::set_alpha(Self, Double) -> Unit
+pub fn TileLayer::set_collision_between(Self, TileCollisionRange) -> Unit
+pub fn TileLayer::set_collision_by_property(Self, TilePropertyMatcher) -> Unit
+pub fn TileLayer::set_visible(Self, Bool) -> Unit
+
+pub(all) struct TileLayerConfig {
+  layer_name : String
+  tileset_name : String
+  x : Double
+  y : Double
+  visible : Bool
+  alpha : Double
+} derive(Eq, @debug.Debug)
+pub fn TileLayerConfig::is_valid(Self) -> Bool
+pub fn TileLayerConfig::new(String, String, x? : Double, y? : Double, visible? : Bool, alpha? : Double) -> Self
+
+pub(all) struct TileObject {
+  name : String
+  object_type : String
+  position : Point2
+  size : Size2
+} derive(Eq, @debug.Debug)
+pub fn TileObject::bounds(Self) -> Rect
+pub fn TileObject::is_valid(Self) -> Bool
+pub fn TileObject::new(String, String, Point2, Size2) -> Self
+
+pub(all) struct TilePropertyMatcher {
+  property : String
+  value : String
+  collides : Bool
+} derive(Eq, @debug.Debug)
+pub fn TilePropertyMatcher::is_valid(Self) -> Bool
+pub fn TilePropertyMatcher::new(String, String, collides? : Bool) -> Self
+
+pub(all) struct TileSpawnPoint {
+  name : String
+  position : Point2
+  facing : AnimationDirection
+} derive(Eq, @debug.Debug)
+pub fn TileSpawnPoint::is_valid(Self) -> Bool
+pub fn TileSpawnPoint::new(String, Point2, facing? : AnimationDirection) -> Self
+
+#external
+pub type Tilemap
+pub fn Tilemap::add_tileset(Self, TilesetConfig) -> Tileset
+pub fn Tilemap::create_layer(Self, TileLayerConfig) -> TileLayer
+
+pub(all) struct TilemapConfig {
+  key : String
+  tile_width : Int
+  tile_height : Int
+  width : Int
+  height : Int
+  orientation : TilemapOrientation
+} derive(Eq, @debug.Debug)
+pub fn TilemapConfig::is_valid(Self) -> Bool
+pub fn TilemapConfig::new(String, Int, Int, width? : Int, height? : Int, orientation? : TilemapOrientation) -> Self
+pub fn TilemapConfig::tile_size(Self) -> Size2
+
+pub(all) struct TilemapJsonAsset {
+  key : String
+  path : String
+} derive(Eq, @debug.Debug)
+pub fn TilemapJsonAsset::is_valid(Self) -> Bool
+pub fn TilemapJsonAsset::new(String, String) -> Self
+
+pub(all) enum TilemapOrientation {
+  TilemapOrthogonal
+  TilemapIsometric
+  TilemapStaggered
+  TilemapHexagonal
+} derive(Eq, @debug.Debug)
+pub fn TilemapOrientation::label(Self) -> String
+
+#external
+pub type Tileset
+
+pub(all) struct TilesetConfig {
+  name : String
+  texture_key : String
+  tile_width : Int
+  tile_height : Int
+  margin : Int
+  spacing : Int
+} derive(Eq, @debug.Debug)
+pub fn TilesetConfig::is_valid(Self) -> Bool
+pub fn TilesetConfig::new(String, String, Int, Int, margin? : Int, spacing? : Int) -> Self
+
+pub(all) struct TouchZone {
+  name : String
+  rect : Rect
+  enabled : Bool
+} derive(Eq, @debug.Debug)
+pub fn TouchZone::contains(Self, PointerSnapshot) -> Bool
+pub fn TouchZone::disable(Self) -> Self
+pub fn TouchZone::enable(Self) -> Self
+pub fn TouchZone::is_valid(Self) -> Bool
+pub fn TouchZone::new(String, Rect, enabled? : Bool) -> Self
+
+pub(all) struct TweenConfig {
+  duration_ms : Int
+  delay_ms : Int
+  ease : EaseKind
+  yoyo : Bool
+  repeat_count : Int
+} derive(Eq, @debug.Debug)
+pub fn TweenConfig::is_valid(Self) -> Bool
+pub fn TweenConfig::new(duration_ms? : Int, delay_ms? : Int, ease? : EaseKind, yoyo? : Bool, repeat_count? : Int) -> Self
+
+pub(all) struct ValidationIssue {
+  severity : ValidationSeverity
+  code : String
+  message : String
+} derive(Eq, @debug.Debug)
+pub fn ValidationIssue::is_error(Self) -> Bool
+pub fn ValidationIssue::is_valid(Self) -> Bool
+pub fn ValidationIssue::new(ValidationSeverity, String, String) -> Self
+
+pub(all) enum ValidationSeverity {
+  SeverityInfo
+  SeverityWarning
+  SeverityError
+} derive(Eq, @debug.Debug)
+pub fn ValidationSeverity::is_blocking(Self) -> Bool
+pub fn ValidationSeverity::label(Self) -> String
 
 pub(all) struct Velocity {
   x : Double
@@ -106,6 +1024,8 @@ pub fn Velocity::new(Double, Double) -> Self
 
 // Type aliases
 pub type OverlapCallback = (Sprite, Sprite) -> Unit
+
+pub type PointerCallback = (Pointer) -> Unit
 
 pub type SceneCallback = (Scene) -> Unit
 

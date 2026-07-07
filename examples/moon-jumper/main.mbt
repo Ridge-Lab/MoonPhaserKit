@@ -35,6 +35,18 @@ fn main {
         bounce_y=0.05,
       ),
     )
+    scene.main_camera().set_bounds(
+      @moonphaserkit.CameraBounds::new(0.0, 0.0, 960.0, 540.0),
+    )
+    scene.main_camera().start_follow(
+      p,
+      options=@moonphaserkit.CameraFollowOptions::new(
+        lerp_x=0.18,
+        lerp_y=0.18,
+        deadzone_width=140.0,
+        deadzone_height=90.0,
+      ),
+    )
     let body = p.body()
     body.set_bounce(0.05, 0.05)
     ignore(scene.add_collider(p, ground))
@@ -43,6 +55,12 @@ fn main {
     ignore(scene.add_collider(p, ledge_right))
     cursors = Some(scene.cursor_keys())
     player = Some(p)
+    scene.on_pointer_down((_pointer : @moonphaserkit.Pointer) => {
+      match player {
+        Some(hero) => hero.body().set_velocity_y(-520.0)
+        None => ()
+      }
+    })
     score = 0
     remaining = 6
     score_text = Some(scene.add_text(24.0, 20.0, "Score: 0", size=22))

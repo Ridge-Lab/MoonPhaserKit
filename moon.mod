@@ -1,6 +1,6 @@
 name = "moonphaserkit/moonphaserkit"
 
-version = "0.1.0"
+version = "0.2.0"
 
 readme = "README.md"
 
@@ -15,8 +15,13 @@ keywords = [
   "javascript",
   "web",
   "arcade-physics",
+  "animation",
+  "audio",
+  "camera",
+  "tilemap",
+  "touch",
 ]
 
 preferred_target = "js"
 
-description = "A focused MoonBit binding for Phaser 3 scenes, sprites, input, text, and Arcade Physics."
+description = "A MoonBit JavaScript binding for Phaser 3 scenes, sprites, animation, audio, camera, tilemaps, input, text, and Arcade Physics."

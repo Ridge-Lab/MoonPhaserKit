@@ -1,21 +1,20 @@
 # Roadmap
 
-## v0.1.0 Competition Scope
+## v0.2.0 Pre-acceptance Hardening
 
-- Phaser 3 game creation.
-- Scene lifecycle callbacks.
-- Image loading.
-- Physics sprites and static sprites.
-- Text rendering.
-- Cursor-key input.
-- Collider and overlap callbacks.
-- Moon Jumper demo.
+- Expanded MoonBit source scale beyond 4k LOC.
+- Added animation descriptors, spritesheet loading, animation creation, and sprite playback helpers.
+- Added audio loading and `Sound` playback controls.
+- Added main-camera bounds, follow, fade, shake, pan, and zoom helpers.
+- Added tilemap JSON loading, tileset binding, layer creation, and collision helpers.
+- Added pointer/touch models and pointer event bindings.
+- Added compatibility, integration, diagnostics, and E2E scenario models.
+- Expanded tests from 7 to 34 cases.
 
-## Later Ideas
+## Next
 
-- Audio helpers.
-- Camera helpers.
-- Animation helpers.
-- Tilemap loading.
-- Pointer/touch input.
-- A generated API layer for larger Phaser subsets.
+- Add exported sample maps and spritesheets for a richer tilemap demo.
+- Add browser E2E assertions for animation frame progress and camera effects.
+- Add optional generated bindings for a broader Phaser API subset.
+- Add API examples for multiple scenes and scene transitions.
+- Add release notes after Mooncakes metadata is confirmed.

@@ -70,6 +70,8 @@ try {
     await wait(250);
     await page.keyboard.up("ArrowRight");
     await page.keyboard.press("ArrowUp");
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+    await wait(150);
     await page.close();
   }
   await browser.close();
