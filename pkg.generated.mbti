@@ -1,0 +1,115 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonphaserkit/moonphaserkit"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+#external
+pub type ArcadeBody
+pub fn ArcadeBody::set_bounce(Self, Double, Double) -> Unit
+pub fn ArcadeBody::set_collide_world_bounds(Self, Bool) -> Unit
+pub fn ArcadeBody::set_gravity_y(Self, Double) -> Unit
+pub fn ArcadeBody::set_immovable(Self, Bool) -> Unit
+pub fn ArcadeBody::set_velocity(Self, Velocity) -> Unit
+pub fn ArcadeBody::set_velocity_x(Self, Double) -> Unit
+pub fn ArcadeBody::set_velocity_y(Self, Double) -> Unit
+pub fn ArcadeBody::touching_down(Self) -> Bool
+
+#external
+pub type Collider
+
+pub(all) enum CursorDirection {
+  Left
+  Right
+  Up
+  Down
+} derive(Eq, @debug.Debug)
+pub fn CursorDirection::to_key_name(Self) -> String
+
+#external
+pub type CursorKeys
+pub fn CursorKeys::key(Self, CursorDirection) -> Key
+
+#external
+pub type Game
+pub fn Game::create(GameConfig, (Scene) -> Unit, (Scene) -> Unit, (Scene) -> Unit) -> Self
+pub fn Game::destroy(Self) -> Unit
+
+pub(all) struct GameConfig {
+  parent : String
+  width : Int
+  height : Int
+  background : String
+  gravity_y : Int
+  debug : Bool
+} derive(Eq, @debug.Debug)
+pub fn GameConfig::is_valid(Self) -> Bool
+pub fn GameConfig::new(parent? : String, width? : Int, height? : Int, background? : String, gravity_y? : Int, debug? : Bool) -> Self
+
+pub(all) struct ImageAsset {
+  key : String
+  path : String
+} derive(Eq, @debug.Debug)
+pub fn ImageAsset::is_valid(Self) -> Bool
+pub fn ImageAsset::new(String, String) -> Self
+
+#external
+pub type Key
+pub fn Key::is_down(Self) -> Bool
+pub fn Key::is_up(Self) -> Bool
+
+#external
+pub type Scene
+pub fn Scene::add_collider(Self, Sprite, Sprite) -> Collider
+pub fn Scene::add_overlap(Self, Sprite, Sprite, (Sprite, Sprite) -> Unit) -> Collider
+pub fn Scene::add_sprite(Self, Double, Double, String) -> Sprite
+pub fn Scene::add_static_sprite(Self, Double, Double, String) -> Sprite
+pub fn Scene::add_text(Self, Double, Double, String, size? : Int, color? : String) -> Text
+pub fn Scene::cursor_keys(Self) -> CursorKeys
+pub fn Scene::load_image(Self, ImageAsset) -> Unit
+pub fn Scene::restart(Self) -> Unit
+
+#external
+pub type Sprite
+pub fn Sprite::apply_options(Self, SpriteOptions) -> Unit
+pub fn Sprite::body(Self) -> ArcadeBody
+pub fn Sprite::destroy(Self) -> Unit
+pub fn Sprite::set_active(Self, Bool) -> Unit
+pub fn Sprite::set_scale(Self, Double) -> Unit
+pub fn Sprite::set_visible(Self, Bool) -> Unit
+
+pub(all) struct SpriteOptions {
+  scale : Double
+  immovable : Bool
+  collide_world_bounds : Bool
+  bounce_x : Double
+  bounce_y : Double
+  gravity_y : Double
+} derive(Eq, @debug.Debug)
+pub fn SpriteOptions::new(scale? : Double, immovable? : Bool, collide_world_bounds? : Bool, bounce_x? : Double, bounce_y? : Double, gravity_y? : Double) -> Self
+
+#external
+pub type Text
+pub fn Text::set_text(Self, String) -> Unit
+
+pub(all) struct Velocity {
+  x : Double
+  y : Double
+} derive(Eq, @debug.Debug)
+pub fn Velocity::new(Double, Double) -> Self
+
+// Type aliases
+pub type OverlapCallback = (Sprite, Sprite) -> Unit
+
+pub type SceneCallback = (Scene) -> Unit
+
+pub type UpdateCallback = (Scene) -> Unit
+
+// Traits
+
