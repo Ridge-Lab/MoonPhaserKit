@@ -1,0 +1,21 @@
+{
+  "name": "moonphaserkit-moon-jumper-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/build-moonbit.mjs",
+    "dev": "vite --host 127.0.0.1",
+    "prebuild": "node scripts/build-moonbit.mjs",
+    "build": "vite build",
+    "presmoke": "node scripts/build-moonbit.mjs",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "phaser": "3.90.0",
+    "vite": "7.0.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.53.2"
+  }
+}
