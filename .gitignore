@@ -1,0 +1,11 @@
+.DS_Store
+_build/
+target/
+target
+.mooncakes/
+.moonagent/
+node_modules/
+dist/
+*.log
+examples/moon-jumper-web/src/generated/moon-jumper.js
+examples/moon-jumper-web/src/generated/moon-jumper.js.map
