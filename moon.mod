@@ -4,7 +4,7 @@ version = "0.1.0"
 
 readme = "README.md"
 
-repository = "https://github.com/your-name/MoonPhaserKit"
+repository = "https://github.com/Ridge-Lab/MoonPhaserKit.git"
 
 license = "MIT"
 
