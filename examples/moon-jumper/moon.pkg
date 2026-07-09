@@ -1,5 +1,5 @@
 import {
-  "moonphaserkit/moonphaserkit",
+  "Ridge-Lab/moonphaserkit",
 }
 
 options(

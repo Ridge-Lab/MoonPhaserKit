@@ -69,6 +69,11 @@ pub type Tileset
 pub type Pointer
 
 ///|
+/// A Phaser.Time.TimerEvent handle.
+#external
+pub type TimerEvent
+
+///|
 pub type SceneCallback = (Scene) -> Unit
 
 ///|
@@ -79,6 +84,9 @@ pub type OverlapCallback = (Sprite, Sprite) -> Unit
 
 ///|
 pub type PointerCallback = (Pointer) -> Unit
+
+///|
+pub type TimerCallback = () -> Unit
 
 ///|
 extern "js" fn js_create_game(
@@ -322,6 +330,85 @@ pub fn Sprite::set_depth(self : Sprite, depth : Int) -> Unit {
 }
 
 ///|
+extern "js" fn js_sprite_set_origin(
+  sprite : Sprite,
+  x : Double,
+  y : Double,
+) -> Unit =
+  #| (sprite, x, y) => sprite.setOrigin(x, y)
+
+///|
+/// Sets sprite origin in normalized coordinates.
+pub fn Sprite::set_origin(self : Sprite, origin : OriginPoint) -> Unit {
+  guard origin.is_valid() else { abort("invalid MoonPhaserKit OriginPoint") }
+  js_sprite_set_origin(self, origin.x, origin.y)
+}
+
+///|
+extern "js" fn js_sprite_set_scale_xy(
+  sprite : Sprite,
+  x : Double,
+  y : Double,
+) -> Unit =
+  #| (sprite, x, y) => sprite.setScale(x, y).refreshBody?.()
+
+///|
+/// Sets sprite scale independently on both axes.
+pub fn Sprite::set_scale_xy(self : Sprite, x : Double, y : Double) -> Unit {
+  guard x > 0.0 && y > 0.0 else { abort("invalid MoonPhaserKit sprite scale") }
+  js_sprite_set_scale_xy(self, x, y)
+}
+
+///|
+extern "js" fn js_sprite_set_rotation(
+  sprite : Sprite,
+  rotation : Double,
+) -> Unit =
+  #| (sprite, rotation) => sprite.setRotation(rotation)
+
+///|
+/// Sets sprite rotation in radians.
+pub fn Sprite::set_rotation(self : Sprite, rotation : Double) -> Unit {
+  js_sprite_set_rotation(self, rotation)
+}
+
+///|
+extern "js" fn js_sprite_set_scroll_factor(
+  sprite : Sprite,
+  x : Double,
+  y : Double,
+) -> Unit =
+  #| (sprite, x, y) => sprite.setScrollFactor(x, y)
+
+///|
+/// Sets how strongly the sprite follows camera scrolling.
+pub fn Sprite::set_scroll_factor(self : Sprite, x : Double, y : Double) -> Unit {
+  guard x >= 0.0 && y >= 0.0 else { abort("invalid MoonPhaserKit scroll factor") }
+  js_sprite_set_scroll_factor(self, x, y)
+}
+
+///|
+extern "js" fn js_sprite_set_texture(sprite : Sprite, key : String) -> Unit =
+  #| (sprite, key) => sprite.setTexture(key)
+
+///|
+/// Switches the sprite texture.
+pub fn Sprite::set_texture(self : Sprite, key : String) -> Unit {
+  guard key.length() > 0 else { abort("invalid MoonPhaserKit texture key") }
+  js_sprite_set_texture(self, key)
+}
+
+///|
+extern "js" fn js_sprite_set_tint(sprite : Sprite, color : Int) -> Unit =
+  #| (sprite, color) => sprite.setTint(color)
+
+///|
+/// Applies a Phaser tint color, for example `0xffcc00`.
+pub fn Sprite::set_tint(self : Sprite, color : Int) -> Unit {
+  js_sprite_set_tint(self, color)
+}
+
+///|
 extern "js" fn js_scene_create_animation(
   scene : Scene,
   key : String,
@@ -439,6 +526,84 @@ pub fn Scene::add_text(
 }
 
 ///|
+extern "js" fn js_scene_add_text_styled(
+  scene : Scene,
+  x : Double,
+  y : Double,
+  value : String,
+  font_family : String,
+  font_size : Int,
+  color : String,
+  background_color : String,
+  stroke_color : String,
+  stroke_thickness : Int,
+  align : String,
+  fixed_width : Int,
+  fixed_height : Int,
+  word_wrap_width : Int,
+) -> Text =
+  #| (
+  #|   scene,
+  #|   x,
+  #|   y,
+  #|   value,
+  #|   fontFamily,
+  #|   fontSize,
+  #|   color,
+  #|   backgroundColor,
+  #|   strokeColor,
+  #|   strokeThickness,
+  #|   align,
+  #|   fixedWidth,
+  #|   fixedHeight,
+  #|   wordWrapWidth
+  #| ) => {
+  #|   const style = {
+  #|     fontFamily,
+  #|     fontSize: `${fontSize}px`,
+  #|     color,
+  #|     align
+  #|   };
+  #|   if (backgroundColor) style.backgroundColor = backgroundColor;
+  #|   if (strokeColor && strokeThickness > 0) {
+  #|     style.stroke = strokeColor;
+  #|     style.strokeThickness = strokeThickness;
+  #|   }
+  #|   if (fixedWidth > 0) style.fixedWidth = fixedWidth;
+  #|   if (fixedHeight > 0) style.fixedHeight = fixedHeight;
+  #|   if (wordWrapWidth > 0) style.wordWrap = { width: wordWrapWidth };
+  #|   return scene.add.text(x, y, value, style);
+  #| }
+
+///|
+/// Adds styled text to the scene.
+pub fn Scene::add_text_styled(
+  self : Scene,
+  x : Double,
+  y : Double,
+  value : String,
+  style? : TextStyle = TextStyle::new(),
+) -> Text {
+  guard style.is_valid() else { abort("invalid MoonPhaserKit TextStyle") }
+  js_scene_add_text_styled(
+    self,
+    x,
+    y,
+    value,
+    style.font_family,
+    style.font_size,
+    style.color,
+    style.background_color,
+    style.stroke_color,
+    style.stroke_thickness,
+    style.align.to_phaser_name(),
+    style.fixed_width,
+    style.fixed_height,
+    style.word_wrap_width,
+  )
+}
+
+///|
 extern "js" fn js_scene_add_sound(
   scene : Scene,
   key : String,
@@ -553,6 +718,70 @@ extern "js" fn js_text_set_text(text : Text, value : String) -> Unit =
 /// Updates a text object's displayed string.
 pub fn Text::set_text(self : Text, value : String) -> Unit {
   js_text_set_text(self, value)
+}
+
+///|
+extern "js" fn js_text_set_position(
+  text : Text,
+  x : Double,
+  y : Double,
+) -> Unit =
+  #| (text, x, y) => text.setPosition(x, y)
+
+///|
+pub fn Text::set_position(self : Text, point : Point2) -> Unit {
+  js_text_set_position(self, point.x, point.y)
+}
+
+///|
+extern "js" fn js_text_set_depth(text : Text, depth : Int) -> Unit =
+  #| (text, depth) => text.setDepth(depth)
+
+///|
+pub fn Text::set_depth(self : Text, depth : Int) -> Unit {
+  js_text_set_depth(self, depth)
+}
+
+///|
+extern "js" fn js_text_set_alpha(text : Text, alpha : Double) -> Unit =
+  #| (text, alpha) => text.setAlpha(alpha)
+
+///|
+pub fn Text::set_alpha(self : Text, alpha : Double) -> Unit {
+  guard alpha >= 0.0 else { abort("invalid MoonPhaserKit text alpha") }
+  js_text_set_alpha(self, alpha)
+}
+
+///|
+extern "js" fn js_text_set_visible(text : Text, visible : Bool) -> Unit =
+  #| (text, visible) => text.setVisible(visible)
+
+///|
+pub fn Text::set_visible(self : Text, visible : Bool) -> Unit {
+  js_text_set_visible(self, visible)
+}
+
+///|
+extern "js" fn js_text_set_scroll_factor(
+  text : Text,
+  x : Double,
+  y : Double,
+) -> Unit =
+  #| (text, x, y) => text.setScrollFactor(x, y)
+
+///|
+pub fn Text::set_scroll_factor(self : Text, x : Double, y : Double) -> Unit {
+  guard x >= 0.0 && y >= 0.0 else { abort("invalid MoonPhaserKit scroll factor") }
+  js_text_set_scroll_factor(self, x, y)
+}
+
+///|
+extern "js" fn js_text_destroy(text : Text) -> Unit =
+  #| (text) => text.destroy()
+
+///|
+pub fn Text::destroy(self : Text) -> Unit {
+  js_text_destroy(self)
 }
 
 ///|
@@ -1260,6 +1489,162 @@ pub fn Scene::restart(self : Scene) -> Unit {
 }
 
 ///|
+extern "js" fn js_scene_start(scene : Scene, key : String) -> Unit =
+  #| (scene, key) => scene.scene.start(key)
+
+///|
+pub fn Scene::start_scene(self : Scene, key : String) -> Unit {
+  guard key.length() > 0 else { abort("invalid MoonPhaserKit scene key") }
+  js_scene_start(self, key)
+}
+
+///|
+extern "js" fn js_scene_launch(scene : Scene, key : String) -> Unit =
+  #| (scene, key) => scene.scene.launch(key)
+
+///|
+pub fn Scene::launch_scene(self : Scene, key : String) -> Unit {
+  guard key.length() > 0 else { abort("invalid MoonPhaserKit scene key") }
+  js_scene_launch(self, key)
+}
+
+///|
+extern "js" fn js_scene_pause(scene : Scene, key : String) -> Unit =
+  #| (scene, key) => scene.scene.pause(key)
+
+///|
+pub fn Scene::pause_scene(self : Scene, key : String) -> Unit {
+  guard key.length() > 0 else { abort("invalid MoonPhaserKit scene key") }
+  js_scene_pause(self, key)
+}
+
+///|
+extern "js" fn js_scene_resume(scene : Scene, key : String) -> Unit =
+  #| (scene, key) => scene.scene.resume(key)
+
+///|
+pub fn Scene::resume_scene(self : Scene, key : String) -> Unit {
+  guard key.length() > 0 else { abort("invalid MoonPhaserKit scene key") }
+  js_scene_resume(self, key)
+}
+
+///|
+extern "js" fn js_scene_stop(scene : Scene, key : String) -> Unit =
+  #| (scene, key) => scene.scene.stop(key)
+
+///|
+pub fn Scene::stop_scene(self : Scene, key : String) -> Unit {
+  guard key.length() > 0 else { abort("invalid MoonPhaserKit scene key") }
+  js_scene_stop(self, key)
+}
+
+///|
+extern "js" fn js_scene_sleep(scene : Scene, key : String) -> Unit =
+  #| (scene, key) => scene.scene.sleep(key)
+
+///|
+pub fn Scene::sleep_scene(self : Scene, key : String) -> Unit {
+  guard key.length() > 0 else { abort("invalid MoonPhaserKit scene key") }
+  js_scene_sleep(self, key)
+}
+
+///|
+extern "js" fn js_scene_wake(scene : Scene, key : String) -> Unit =
+  #| (scene, key) => scene.scene.wake(key)
+
+///|
+pub fn Scene::wake_scene(self : Scene, key : String) -> Unit {
+  guard key.length() > 0 else { abort("invalid MoonPhaserKit scene key") }
+  js_scene_wake(self, key)
+}
+
+///|
+extern "js" fn js_scene_is_active(scene : Scene, key : String) -> Bool =
+  #| (scene, key) => scene.scene.isActive(key)
+
+///|
+pub fn Scene::is_scene_active(self : Scene, key : String) -> Bool {
+  guard key.length() > 0 else { abort("invalid MoonPhaserKit scene key") }
+  js_scene_is_active(self, key)
+}
+
+///|
+extern "js" fn js_scene_add_timer_event(
+  scene : Scene,
+  delay_ms : Int,
+  repeat : Int,
+  should_loop : Bool,
+  start_at_ms : Int,
+  time_scale : Double,
+  paused : Bool,
+  callback : TimerCallback,
+) -> TimerEvent =
+  #| (scene, delayMs, repeat, shouldLoop, startAtMs, timeScale, paused, callback) => {
+  #|   return scene.time.addEvent({
+  #|     delay: delayMs,
+  #|     repeat,
+  #|     loop: shouldLoop,
+  #|     startAt: startAtMs,
+  #|     timeScale,
+  #|     paused,
+  #|     callback: () => callback()
+  #|   });
+  #| }
+
+///|
+pub fn Scene::add_timer_event(
+  self : Scene,
+  config : TimerEventConfig,
+  callback : TimerCallback,
+) -> TimerEvent {
+  guard config.is_valid() else { abort("invalid MoonPhaserKit TimerEventConfig") }
+  js_scene_add_timer_event(
+    self,
+    config.delay_ms,
+    config.phaser_repeat(),
+    config.loops_forever(),
+    config.start_at_ms,
+    config.time_scale,
+    config.paused,
+    callback,
+  )
+}
+
+///|
+pub fn Scene::delayed_call(
+  self : Scene,
+  delay : DurationMs,
+  callback : TimerCallback,
+) -> TimerEvent {
+  guard delay.is_valid() else { abort("invalid MoonPhaserKit delay") }
+  self.add_timer_event(TimerEventConfig::once(delay.value), callback)
+}
+
+///|
+extern "js" fn js_timer_remove(
+  timer : TimerEvent,
+  dispatch_callback : Bool,
+) -> Unit =
+  #| (timer, dispatchCallback) => timer.remove(dispatchCallback)
+
+///|
+pub fn TimerEvent::remove(
+  self : TimerEvent,
+  dispatch_callback? : Bool = false,
+) -> Unit {
+  js_timer_remove(self, dispatch_callback)
+}
+
+///|
+extern "js" fn js_timer_get_progress(timer : TimerEvent) -> Double =
+  #| (timer) => timer.getProgress()
+
+///|
+pub fn TimerEvent::get_progress(self : TimerEvent) -> Double {
+  js_timer_get_progress(self)
+}
+
+///|
 /// Applies reusable sprite options to an Arcade sprite.
 pub fn Sprite::apply_options(self : Sprite, options : SpriteOptions) -> Unit {
   self.set_scale(options.scale)
@@ -1268,4 +1653,21 @@ pub fn Sprite::apply_options(self : Sprite, options : SpriteOptions) -> Unit {
   body.set_collide_world_bounds(options.collide_world_bounds)
   body.set_bounce(options.bounce_x, options.bounce_y)
   body.set_gravity_y(options.gravity_y)
+}
+
+///|
+/// Applies display options that are shared by sprites and UI specs.
+pub fn Sprite::apply_display_options(
+  self : Sprite,
+  options : DisplayObjectOptions,
+) -> Unit {
+  guard options.is_valid() else { abort("invalid MoonPhaserKit DisplayObjectOptions") }
+  self.set_position(options.position)
+  self.set_origin(options.origin)
+  self.set_scale_xy(options.scale_x, options.scale_y)
+  self.set_rotation(options.rotation)
+  self.set_alpha(options.alpha)
+  self.set_depth(options.depth)
+  self.set_visible(options.visible)
+  self.set_active(options.active)
 }

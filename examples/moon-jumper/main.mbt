@@ -63,7 +63,14 @@ fn main {
     })
     score = 0
     remaining = 6
-    score_text = Some(scene.add_text(24.0, 20.0, "Score: 0", size=22))
+    score_text = Some(
+      scene.add_text_styled(
+        24.0,
+        20.0,
+        "Score: 0",
+        style=@moonphaserkit.TextStyle::scoreboard(),
+      ),
+    )
     let star_positions = [
       (190.0, 340.0),
       (350.0, 460.0),

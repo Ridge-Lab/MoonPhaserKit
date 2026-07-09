@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "moonphaserkit/moonphaserkit"
+package "Ridge-Lab/moonphaserkit"
 
 import {
   "moonbitlang/core/debug",
@@ -677,8 +677,13 @@ pub fn Scene::add_sound(Self, String, options? : SoundOptions) -> Sound
 pub fn Scene::add_sprite(Self, Double, Double, String) -> Sprite
 pub fn Scene::add_static_sprite(Self, Double, Double, String) -> Sprite
 pub fn Scene::add_text(Self, Double, Double, String, size? : Int, color? : String) -> Text
+pub fn Scene::add_text_styled(Self, Double, Double, String, style? : TextStyle) -> Text
+pub fn Scene::add_timer_event(Self, TimerEventConfig, () -> Unit) -> TimerEvent
 pub fn Scene::create_animation(Self, AnimationConfig) -> Unit
 pub fn Scene::cursor_keys(Self) -> CursorKeys
+pub fn Scene::delayed_call(Self, DurationMs, () -> Unit) -> TimerEvent
+pub fn Scene::is_scene_active(Self, String) -> Bool
+pub fn Scene::launch_scene(Self, String) -> Unit
 pub fn Scene::load_atlas(Self, TextureAtlasAsset) -> Unit
 pub fn Scene::load_audio(Self, AudioAsset) -> Unit
 pub fn Scene::load_image(Self, ImageAsset) -> Unit
@@ -689,7 +694,33 @@ pub fn Scene::make_tilemap(Self, TilemapConfig) -> Tilemap
 pub fn Scene::on_pointer_down(Self, (Pointer) -> Unit) -> Unit
 pub fn Scene::on_pointer_move(Self, (Pointer) -> Unit) -> Unit
 pub fn Scene::on_pointer_up(Self, (Pointer) -> Unit) -> Unit
+pub fn Scene::pause_scene(Self, String) -> Unit
 pub fn Scene::restart(Self) -> Unit
+pub fn Scene::resume_scene(Self, String) -> Unit
+pub fn Scene::sleep_scene(Self, String) -> Unit
+pub fn Scene::start_scene(Self, String) -> Unit
+pub fn Scene::stop_scene(Self, String) -> Unit
+pub fn Scene::wake_scene(Self, String) -> Unit
+
+pub(all) enum SceneControlAction {
+  SceneStart
+  SceneLaunch
+  ScenePause
+  SceneResume
+  SceneStop
+  SceneSleep
+  SceneWake
+} derive(Eq, @debug.Debug)
+pub fn SceneControlAction::keeps_current_scene(Self) -> Bool
+pub fn SceneControlAction::label(Self) -> String
+
+pub(all) struct SceneControlCommand {
+  action : SceneControlAction
+  target_scene : String
+} derive(Eq, @debug.Debug)
+pub fn SceneControlCommand::is_transition(Self) -> Bool
+pub fn SceneControlCommand::is_valid(Self) -> Bool
+pub fn SceneControlCommand::new(SceneControlAction, String) -> Self
 
 pub(all) struct SceneLayerConfig {
   kind : SceneLayerKind
@@ -784,6 +815,7 @@ pub fn SpawnSpec::with_layer(Self, SceneLayerKind) -> Self
 
 #external
 pub type Sprite
+pub fn Sprite::apply_display_options(Self, DisplayObjectOptions) -> Unit
 pub fn Sprite::apply_options(Self, SpriteOptions) -> Unit
 pub fn Sprite::body(Self) -> ArcadeBody
 pub fn Sprite::destroy(Self) -> Unit
@@ -792,8 +824,14 @@ pub fn Sprite::set_active(Self, Bool) -> Unit
 pub fn Sprite::set_alpha(Self, Double) -> Unit
 pub fn Sprite::set_depth(Self, Int) -> Unit
 pub fn Sprite::set_flip_x(Self, Bool) -> Unit
+pub fn Sprite::set_origin(Self, OriginPoint) -> Unit
 pub fn Sprite::set_position(Self, Point2) -> Unit
+pub fn Sprite::set_rotation(Self, Double) -> Unit
 pub fn Sprite::set_scale(Self, Double) -> Unit
+pub fn Sprite::set_scale_xy(Self, Double, Double) -> Unit
+pub fn Sprite::set_scroll_factor(Self, Double, Double) -> Unit
+pub fn Sprite::set_texture(Self, String) -> Unit
+pub fn Sprite::set_tint(Self, Int) -> Unit
 pub fn Sprite::set_visible(Self, Bool) -> Unit
 pub fn Sprite::stop_animation(Self) -> Unit
 
@@ -861,7 +899,40 @@ pub fn SwipeSnapshot::new(Point2, Point2, Int, config? : SwipeConfig) -> Self
 
 #external
 pub type Text
+pub fn Text::destroy(Self) -> Unit
+pub fn Text::set_alpha(Self, Double) -> Unit
+pub fn Text::set_depth(Self, Int) -> Unit
+pub fn Text::set_position(Self, Point2) -> Unit
+pub fn Text::set_scroll_factor(Self, Double, Double) -> Unit
 pub fn Text::set_text(Self, String) -> Unit
+pub fn Text::set_visible(Self, Bool) -> Unit
+
+pub(all) enum TextAlign {
+  TextAlignLeft
+  TextAlignCenter
+  TextAlignRight
+} derive(Eq, @debug.Debug)
+pub fn TextAlign::to_phaser_name(Self) -> String
+
+pub(all) struct TextStyle {
+  font_family : String
+  font_size : Int
+  color : String
+  background_color : String
+  stroke_color : String
+  stroke_thickness : Int
+  align : TextAlign
+  fixed_width : Int
+  fixed_height : Int
+  word_wrap_width : Int
+} derive(Eq, @debug.Debug)
+pub fn TextStyle::dialogue() -> Self
+pub fn TextStyle::has_background(Self) -> Bool
+pub fn TextStyle::has_stroke(Self) -> Bool
+pub fn TextStyle::is_valid(Self) -> Bool
+pub fn TextStyle::new(font_family? : String, font_size? : Int, color? : String, background_color? : String, stroke_color? : String, stroke_thickness? : Int, align? : TextAlign, fixed_width? : Int, fixed_height? : Int, word_wrap_width? : Int) -> Self
+pub fn TextStyle::scoreboard() -> Self
+pub fn TextStyle::with_color(Self, String) -> Self
 
 pub(all) struct TextureAsset {
   key : String
@@ -978,6 +1049,37 @@ pub(all) struct TilesetConfig {
 pub fn TilesetConfig::is_valid(Self) -> Bool
 pub fn TilesetConfig::new(String, String, Int, Int, margin? : Int, spacing? : Int) -> Self
 
+#external
+pub type TimerEvent
+pub fn TimerEvent::get_progress(Self) -> Double
+pub fn TimerEvent::remove(Self, dispatch_callback? : Bool) -> Unit
+
+pub(all) struct TimerEventConfig {
+  delay_ms : Int
+  repeat_mode : TimerRepeatMode
+  repeat_count : Int
+  start_at_ms : Int
+  time_scale : Double
+  paused : Bool
+} derive(Eq, @debug.Debug)
+pub fn TimerEventConfig::fires_once(Self) -> Bool
+pub fn TimerEventConfig::is_valid(Self) -> Bool
+pub fn TimerEventConfig::looping(Int) -> Self
+pub fn TimerEventConfig::loops_forever(Self) -> Bool
+pub fn TimerEventConfig::new(delay_ms? : Int, repeat_mode? : TimerRepeatMode, repeat_count? : Int, start_at_ms? : Int, time_scale? : Double, paused? : Bool) -> Self
+pub fn TimerEventConfig::once(Int) -> Self
+pub fn TimerEventConfig::phaser_repeat(Self) -> Int
+pub fn TimerEventConfig::repeat(Int, Int) -> Self
+
+pub(all) enum TimerRepeatMode {
+  TimerOnce
+  TimerRepeat
+  TimerLoop
+} derive(Eq, @debug.Debug)
+pub fn TimerRepeatMode::label(Self) -> String
+pub fn TimerRepeatMode::should_loop(Self) -> Bool
+pub fn TimerRepeatMode::to_repeat_count(Self, repeat_count? : Int) -> Int
+
 pub(all) struct TouchZone {
   name : String
   rect : Rect
@@ -1028,6 +1130,8 @@ pub type OverlapCallback = (Sprite, Sprite) -> Unit
 pub type PointerCallback = (Pointer) -> Unit
 
 pub type SceneCallback = (Scene) -> Unit
+
+pub type TimerCallback = () -> Unit
 
 pub type UpdateCallback = (Scene) -> Unit
 

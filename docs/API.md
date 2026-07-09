@@ -12,6 +12,46 @@ MoonPhaserKit 面向 MoonBit JavaScript 后端，提供一组经过收敛的 Pha
 - `create`：创建精灵、文字、动画、音效、碰撞、相机和输入。
 - `update`：执行每帧游戏逻辑。
 
+## 场景控制
+
+MoonPhaserKit 提供 Phaser Scene Plugin 的常用控制方法：
+
+```moonbit
+scene.launch_scene("pause-menu")
+scene.pause_scene("level-1")
+scene.resume_scene("level-1")
+scene.start_scene("level-2")
+```
+
+相关类型：
+
+- `SceneControlAction`：start、launch、pause、resume、stop、sleep、wake。
+- `SceneControlCommand`：可测试的场景控制描述，用于菜单、关卡切换和暂停面板。
+- `SceneTransition`：带淡入淡出配置的场景切换模型。
+
+## 时间事件
+
+```moonbit
+ignore(scene.delayed_call(DurationMs::seconds(1), () => {
+  player.set_tint(0xffcc00)
+}))
+
+ignore(scene.add_timer_event(
+  TimerEventConfig::repeat(500, 3),
+  () => {
+    score_text.set_text("Combo!")
+  },
+))
+```
+
+相关类型：
+
+- `TimerEventConfig::once(delay_ms)`：执行一次。
+- `TimerEventConfig::repeat(delay_ms, repeat_count)`：重复指定次数。
+- `TimerEventConfig::looping(delay_ms)`：循环执行。
+- `TimerEvent::remove()`：移除定时器。
+- `TimerEvent::get_progress()`：读取 Phaser 定时器进度。
+
 ## 资源加载
 
 ```moonbit
@@ -93,6 +133,30 @@ scene.on_pointer_down(pointer => {
 
 纯 MoonBit 模型层提供 `PointerSnapshot`、`TouchZone`、`SwipeSnapshot` 和 `KeyBinding`，方便测试移动端输入逻辑。
 
+## 文本与 UI
+
+基础文字：
+
+```moonbit
+let score = scene.add_text(24.0, 20.0, "Score: 0", size=22)
+score.set_text("Score: 10")
+```
+
+带样式文字：
+
+```moonbit
+let panel = scene.add_text_styled(
+  24.0,
+  24.0,
+  "Paused",
+  style=TextStyle::dialogue(),
+)
+panel.set_depth(1000)
+panel.set_scroll_factor(0.0, 0.0)
+```
+
+`TextStyle` 支持字体、字号、颜色、背景色、描边、对齐、固定尺寸和自动换行宽度。常用预设包括 `TextStyle::scoreboard()` 和 `TextStyle::dialogue()`。
+
 ## 相机
 
 ```moonbit
@@ -130,6 +194,26 @@ ground.set_collision_between(TileCollisionRange::new(1, 200))
 - `touching_down`
 
 `PhysicsMaterial` 可以把常用物理配置转成 `SpriteOptions`，用于平台、拾取物和角色生成。
+
+## 显示对象控制
+
+`Sprite` 支持常用显示属性：
+
+- `set_position`
+- `set_scale`
+- `set_scale_xy`
+- `set_origin`
+- `set_rotation`
+- `set_alpha`
+- `set_depth`
+- `set_scroll_factor`
+- `set_texture`
+- `set_tint`
+- `set_visible`
+- `set_active`
+- `destroy`
+
+`DisplayObjectOptions` 可以把位置、原点、缩放、旋转、透明度、层级、显示状态和激活状态打包，配合 `Sprite::apply_display_options` 使用。
 
 ## 兼容性与集成模型
 
