@@ -43,7 +43,7 @@ pnpm run smoke
 
 ## Mooncakes
 
-发布前确认：
+当前包元数据：
 
 ```text
 name = "Ridge-Lab/moonphaserkit"
@@ -52,7 +52,7 @@ license = "MIT"
 preferred_target = "js"
 ```
 
-如果你的 Mooncakes 用户名不是 `Ridge-Lab`，请把 `name` 中 `/` 前面的 owner 改成真实 Mooncakes 用户名后再执行：
+提交前请登录 Mooncakes 并执行发布或更新。如果实际 Mooncakes 用户名不是 `Ridge-Lab`，请先把 `name` 中 `/` 前面的 owner 改成真实 Mooncakes 用户名：
 
 ```bash
 moon publish
@@ -65,4 +65,4 @@ moon publish
 - GitHub 仓库链接
 - GitLink 仓库链接
 - 一页 PDF 申报书
-- Mooncakes 包地址，发布后填写
+- Mooncakes 包地址；如果提交系统要求填写，请使用发布成功后的实际包页面

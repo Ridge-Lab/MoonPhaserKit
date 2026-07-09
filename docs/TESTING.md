@@ -40,9 +40,9 @@ pnpm run smoke
 - 模拟方向键移动和跳跃。
 - 捕获页面错误、异常 HTTP 响应和 console error。
 
-## 后续 E2E 扩展
+## E2E 场景模型
 
-代码中新增 `BrowserSmokeScenario`、`InteractionStep`、`ErrorPathExpectation` 和 `InteractionScenarioSummary`，用于把验收场景表达成 MoonBit 模型。后续可以把这些模型导出给 JS 测试脚本，扩展到：
+代码中新增 `BrowserSmokeScenario`、`InteractionStep`、`ErrorPathExpectation` 和 `InteractionScenarioSummary`，用于把验收场景表达成 MoonBit 模型。当前 JS smoke 脚本覆盖 canvas、桌面/移动视口、键盘/点击交互和错误捕获；这些模型用于把更多交互验收项固化到 MoonBit 测试与扩展自动化脚本中：
 
 - 动画播放状态断言。
 - 音频解锁后的播放断言。

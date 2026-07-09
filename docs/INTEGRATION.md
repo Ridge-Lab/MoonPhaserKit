@@ -14,7 +14,7 @@ pnpm install --frozen-lockfile
 
 Demo 固定使用 Phaser `3.90.0`。如果在新项目里集成，建议先使用相同版本，确认通过后再升级。
 
-如果通过源码方式验收，直接使用仓库根目录即可；如果通过 Mooncakes 安装，请先确认 `moon.mod` 中的 owner 与你的 Mooncakes 用户名一致，并完成 `moon publish`。
+如果通过源码方式验收，直接使用仓库根目录即可；如果通过 Mooncakes 安装，请使用 `moon.mod` 中配置的模块名。维护者发布或更新包时，需要确认 owner 与 Mooncakes 用户名一致，并执行 `moon publish`。
 
 ## 2. 暴露 Phaser
 
