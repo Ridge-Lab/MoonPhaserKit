@@ -213,7 +213,9 @@ pub fn AssetManifestEntry::is_valid(self : AssetManifestEntry) -> Bool {
 }
 
 ///|
-pub fn AssetManifestEntry::requires_secondary_path(self : AssetManifestEntry) -> Bool {
+pub fn AssetManifestEntry::requires_secondary_path(
+  self : AssetManifestEntry,
+) -> Bool {
   match self.kind {
     AssetAtlas => true
     AssetBitmapFont => true
@@ -222,7 +224,9 @@ pub fn AssetManifestEntry::requires_secondary_path(self : AssetManifestEntry) ->
 }
 
 ///|
-pub fn AssetManifestEntry::secondary_path_is_valid(self : AssetManifestEntry) -> Bool {
+pub fn AssetManifestEntry::secondary_path_is_valid(
+  self : AssetManifestEntry,
+) -> Bool {
   if self.requires_secondary_path() {
     self.secondary_path.length() > 0
   } else {
@@ -234,4 +238,3 @@ pub fn AssetManifestEntry::secondary_path_is_valid(self : AssetManifestEntry) ->
 pub fn AssetManifestEntry::is_complete(self : AssetManifestEntry) -> Bool {
   self.is_valid() && self.secondary_path_is_valid()
 }
-

@@ -20,10 +20,7 @@ test "moonbit backend compatibility is intentionally js only" {
 test "runtime compatibility summarizes host requirements" {
   let runtime = @moonphaserkit.RuntimeCompatibility::new()
   assert_true(runtime.is_supported())
-  assert_eq(
-    runtime.support_summary(),
-    "javascript + Phaser 3.90.0 + chromium",
-  )
+  assert_eq(runtime.support_summary(), "javascript + Phaser 3.90.0 + chromium")
   let unsupported = @moonphaserkit.RuntimeCompatibility::new(
     backend=@moonphaserkit.BackendWasm,
   )
@@ -65,7 +62,9 @@ test "integration checklist separates demo readiness from release readiness" {
   )
   assert_true(checklist.is_demo_ready())
   assert_false(checklist.is_release_ready())
-  assert_true(@moonphaserkit.IntegrationChecklist::complete().is_release_ready())
+  assert_true(
+    @moonphaserkit.IntegrationChecklist::complete().is_release_ready(),
+  )
 }
 
 ///|
@@ -75,4 +74,3 @@ test "publication state labels keep README wording explicit" {
   assert_eq(@moonphaserkit.PackagePublished.label(), "published")
   assert_true(@moonphaserkit.PackagePublished.matches_readme())
 }
-

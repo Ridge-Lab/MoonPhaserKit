@@ -24,9 +24,10 @@
 moon check --target js
 moon test --target js
 cd examples/moon-jumper-web
-npm install
-npm run build
-npm run smoke
+corepack enable
+pnpm install --frozen-lockfile
+pnpm run build
+pnpm run smoke
 ```
 
 ## 不应上传

@@ -58,7 +58,7 @@ pub fn TimerEventConfig::new(
 
 ///|
 pub fn TimerEventConfig::once(delay_ms : Int) -> TimerEventConfig {
-  TimerEventConfig::new(delay_ms=delay_ms)
+  TimerEventConfig::new(delay_ms~)
 }
 
 ///|
@@ -66,16 +66,12 @@ pub fn TimerEventConfig::repeat(
   delay_ms : Int,
   repeat_count : Int,
 ) -> TimerEventConfig {
-  TimerEventConfig::new(
-    delay_ms=delay_ms,
-    repeat_mode=TimerRepeat,
-    repeat_count=repeat_count,
-  )
+  TimerEventConfig::new(delay_ms~, repeat_mode=TimerRepeat, repeat_count~)
 }
 
 ///|
 pub fn TimerEventConfig::looping(delay_ms : Int) -> TimerEventConfig {
-  TimerEventConfig::new(delay_ms=delay_ms, repeat_mode=TimerLoop)
+  TimerEventConfig::new(delay_ms~, repeat_mode=TimerLoop)
 }
 
 ///|

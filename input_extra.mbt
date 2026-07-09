@@ -63,7 +63,11 @@ pub(all) struct TouchZone {
 } derive(Eq, @debug.Debug)
 
 ///|
-pub fn TouchZone::new(name : String, rect : Rect, enabled? : Bool = true) -> TouchZone {
+pub fn TouchZone::new(
+  name : String,
+  rect : Rect,
+  enabled? : Bool = true,
+) -> TouchZone {
   { name, rect, enabled }
 }
 
@@ -73,7 +77,10 @@ pub fn TouchZone::is_valid(self : TouchZone) -> Bool {
 }
 
 ///|
-pub fn TouchZone::contains(self : TouchZone, snapshot : PointerSnapshot) -> Bool {
+pub fn TouchZone::contains(
+  self : TouchZone,
+  snapshot : PointerSnapshot,
+) -> Bool {
   self.enabled && self.rect.contains(snapshot.position)
 }
 
@@ -214,4 +221,3 @@ pub fn KeyBinding::new(action : GameAction, key_code : String) -> KeyBinding {
 pub fn KeyBinding::is_valid(self : KeyBinding) -> Bool {
   self.key_code.length() > 0
 }
-

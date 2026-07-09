@@ -207,7 +207,9 @@ extern "js" fn js_scene_load_spritesheet(
 ///|
 /// Loads a spritesheet for frame animations.
 pub fn Scene::load_spritesheet(self : Scene, asset : SpriteSheetAsset) -> Unit {
-  guard asset.is_valid() else { abort("invalid MoonPhaserKit SpriteSheetAsset") }
+  guard asset.is_valid() else {
+    abort("invalid MoonPhaserKit SpriteSheetAsset")
+  }
   js_scene_load_spritesheet(
     self,
     asset.key,
@@ -231,7 +233,9 @@ extern "js" fn js_scene_load_atlas(
 ///|
 /// Loads a texture atlas.
 pub fn Scene::load_atlas(self : Scene, asset : TextureAtlasAsset) -> Unit {
-  guard asset.is_valid() else { abort("invalid MoonPhaserKit TextureAtlasAsset") }
+  guard asset.is_valid() else {
+    abort("invalid MoonPhaserKit TextureAtlasAsset")
+  }
   js_scene_load_atlas(self, asset.key, asset.texture_path, asset.atlas_path)
 }
 
@@ -261,7 +265,9 @@ extern "js" fn js_scene_load_tilemap_json(
 ///|
 /// Loads a Tiled JSON tilemap.
 pub fn Scene::load_tilemap_json(self : Scene, asset : TilemapJsonAsset) -> Unit {
-  guard asset.is_valid() else { abort("invalid MoonPhaserKit TilemapJsonAsset") }
+  guard asset.is_valid() else {
+    abort("invalid MoonPhaserKit TilemapJsonAsset")
+  }
   js_scene_load_tilemap_json(self, asset.key, asset.path)
 }
 
@@ -383,7 +389,9 @@ extern "js" fn js_sprite_set_scroll_factor(
 ///|
 /// Sets how strongly the sprite follows camera scrolling.
 pub fn Sprite::set_scroll_factor(self : Sprite, x : Double, y : Double) -> Unit {
-  guard x >= 0.0 && y >= 0.0 else { abort("invalid MoonPhaserKit scroll factor") }
+  guard x >= 0.0 && y >= 0.0 else {
+    abort("invalid MoonPhaserKit scroll factor")
+  }
   js_sprite_set_scroll_factor(self, x, y)
 }
 
@@ -434,7 +442,9 @@ extern "js" fn js_scene_create_animation(
 ///|
 /// Creates a frame-number based animation.
 pub fn Scene::create_animation(self : Scene, config : AnimationConfig) -> Unit {
-  guard config.is_valid() else { abort("invalid MoonPhaserKit AnimationConfig") }
+  guard config.is_valid() else {
+    abort("invalid MoonPhaserKit AnimationConfig")
+  }
   js_scene_create_animation(
     self,
     config.key,
@@ -771,7 +781,9 @@ extern "js" fn js_text_set_scroll_factor(
 
 ///|
 pub fn Text::set_scroll_factor(self : Text, x : Double, y : Double) -> Unit {
-  guard x >= 0.0 && y >= 0.0 else { abort("invalid MoonPhaserKit scroll factor") }
+  guard x >= 0.0 && y >= 0.0 else {
+    abort("invalid MoonPhaserKit scroll factor")
+  }
   js_text_set_scroll_factor(self, x, y)
 }
 
@@ -908,7 +920,16 @@ pub fn Pointer::is_down(self : Pointer) -> Bool {
 
 ///|
 extern "js" fn js_pointer_just_down(pointer : Pointer) -> Bool =
-  #| (pointer) => Phaser.Input.Pointer.JustDown(pointer)
+  #| (pointer) => {
+  #|   const justDown = globalThis.Phaser?.Input?.Pointer?.JustDown;
+  #|   if (typeof justDown === "function") {
+  #|     return justDown(pointer);
+  #|   }
+  #|   if (typeof pointer.justDown === "boolean") {
+  #|     return pointer.justDown;
+  #|   }
+  #|   return Boolean(pointer.isDown && pointer.downTime >= pointer.upTime);
+  #| }
 
 ///|
 pub fn Pointer::just_down(self : Pointer) -> Bool {
@@ -1154,7 +1175,9 @@ pub fn Camera::start_follow(
   sprite : Sprite,
   options? : CameraFollowOptions = CameraFollowOptions::new(),
 ) -> Unit {
-  guard options.is_valid() else { abort("invalid MoonPhaserKit CameraFollowOptions") }
+  guard options.is_valid() else {
+    abort("invalid MoonPhaserKit CameraFollowOptions")
+  }
   js_camera_start_follow(
     self,
     sprite,
@@ -1215,8 +1238,17 @@ pub fn Camera::fade_in(
   self : Camera,
   options? : CameraFadeOptions = CameraFadeOptions::new(),
 ) -> Unit {
-  guard options.is_valid() else { abort("invalid MoonPhaserKit CameraFadeOptions") }
-  js_camera_fade_in(self, options.duration_ms, options.red, options.green, options.blue, options.force)
+  guard options.is_valid() else {
+    abort("invalid MoonPhaserKit CameraFadeOptions")
+  }
+  js_camera_fade_in(
+    self,
+    options.duration_ms,
+    options.red,
+    options.green,
+    options.blue,
+    options.force,
+  )
 }
 
 ///|
@@ -1235,8 +1267,17 @@ pub fn Camera::fade_out(
   self : Camera,
   options? : CameraFadeOptions = CameraFadeOptions::new(),
 ) -> Unit {
-  guard options.is_valid() else { abort("invalid MoonPhaserKit CameraFadeOptions") }
-  js_camera_fade_out(self, options.duration_ms, options.red, options.green, options.blue, options.force)
+  guard options.is_valid() else {
+    abort("invalid MoonPhaserKit CameraFadeOptions")
+  }
+  js_camera_fade_out(
+    self,
+    options.duration_ms,
+    options.red,
+    options.green,
+    options.blue,
+    options.force,
+  )
 }
 
 ///|
@@ -1253,7 +1294,9 @@ pub fn Camera::shake(
   self : Camera,
   options? : CameraShakeOptions = CameraShakeOptions::new(),
 ) -> Unit {
-  guard options.is_valid() else { abort("invalid MoonPhaserKit CameraShakeOptions") }
+  guard options.is_valid() else {
+    abort("invalid MoonPhaserKit CameraShakeOptions")
+  }
   js_camera_shake(self, options.duration_ms, options.intensity, options.force)
 }
 
@@ -1270,7 +1313,9 @@ extern "js" fn js_camera_pan(
 
 ///|
 pub fn Camera::pan(self : Camera, options : CameraPanOptions) -> Unit {
-  guard options.is_valid() else { abort("invalid MoonPhaserKit CameraPanOptions") }
+  guard options.is_valid() else {
+    abort("invalid MoonPhaserKit CameraPanOptions")
+  }
   js_camera_pan(
     self,
     options.target.x,
@@ -1292,8 +1337,15 @@ extern "js" fn js_camera_zoom_to(
 
 ///|
 pub fn Camera::zoom_to(self : Camera, options : CameraZoomOptions) -> Unit {
-  guard options.is_valid() else { abort("invalid MoonPhaserKit CameraZoomOptions") }
-  js_camera_zoom_to(self, options.zoom, options.duration_ms, options.ease.to_phaser_name())
+  guard options.is_valid() else {
+    abort("invalid MoonPhaserKit CameraZoomOptions")
+  }
+  js_camera_zoom_to(
+    self,
+    options.zoom,
+    options.duration_ms,
+    options.ease.to_phaser_name(),
+  )
 }
 
 ///|
@@ -1402,8 +1454,13 @@ extern "js" fn js_tilemap_create_layer(
   #| }
 
 ///|
-pub fn Tilemap::create_layer(self : Tilemap, config : TileLayerConfig) -> TileLayer {
-  guard config.is_valid() else { abort("invalid MoonPhaserKit TileLayerConfig") }
+pub fn Tilemap::create_layer(
+  self : Tilemap,
+  config : TileLayerConfig,
+) -> TileLayer {
+  guard config.is_valid() else {
+    abort("invalid MoonPhaserKit TileLayerConfig")
+  }
   js_tilemap_create_layer(
     self,
     config.layer_name,
@@ -1429,8 +1486,15 @@ pub fn TileLayer::set_collision_between(
   self : TileLayer,
   range : TileCollisionRange,
 ) -> Unit {
-  guard range.is_valid() else { abort("invalid MoonPhaserKit TileCollisionRange") }
-  js_tile_layer_set_collision_between(self, range.start_index, range.end_index, range.collides)
+  guard range.is_valid() else {
+    abort("invalid MoonPhaserKit TileCollisionRange")
+  }
+  js_tile_layer_set_collision_between(
+    self,
+    range.start_index,
+    range.end_index,
+    range.collides,
+  )
 }
 
 ///|
@@ -1447,12 +1511,22 @@ pub fn TileLayer::set_collision_by_property(
   self : TileLayer,
   matcher : TilePropertyMatcher,
 ) -> Unit {
-  guard matcher.is_valid() else { abort("invalid MoonPhaserKit TilePropertyMatcher") }
-  js_tile_layer_set_collision_by_property(self, matcher.property, matcher.value, matcher.collides)
+  guard matcher.is_valid() else {
+    abort("invalid MoonPhaserKit TilePropertyMatcher")
+  }
+  js_tile_layer_set_collision_by_property(
+    self,
+    matcher.property,
+    matcher.value,
+    matcher.collides,
+  )
 }
 
 ///|
-extern "js" fn js_tile_layer_set_visible(layer : TileLayer, visible : Bool) -> Unit =
+extern "js" fn js_tile_layer_set_visible(
+  layer : TileLayer,
+  visible : Bool,
+) -> Unit =
   #| (layer, visible) => layer.setVisible(visible)
 
 ///|
@@ -1461,7 +1535,10 @@ pub fn TileLayer::set_visible(self : TileLayer, visible : Bool) -> Unit {
 }
 
 ///|
-extern "js" fn js_tile_layer_set_alpha(layer : TileLayer, alpha : Double) -> Unit =
+extern "js" fn js_tile_layer_set_alpha(
+  layer : TileLayer,
+  alpha : Double,
+) -> Unit =
   #| (layer, alpha) => layer.setAlpha(alpha)
 
 ///|
@@ -1597,7 +1674,9 @@ pub fn Scene::add_timer_event(
   config : TimerEventConfig,
   callback : TimerCallback,
 ) -> TimerEvent {
-  guard config.is_valid() else { abort("invalid MoonPhaserKit TimerEventConfig") }
+  guard config.is_valid() else {
+    abort("invalid MoonPhaserKit TimerEventConfig")
+  }
   js_scene_add_timer_event(
     self,
     config.delay_ms,
@@ -1661,7 +1740,9 @@ pub fn Sprite::apply_display_options(
   self : Sprite,
   options : DisplayObjectOptions,
 ) -> Unit {
-  guard options.is_valid() else { abort("invalid MoonPhaserKit DisplayObjectOptions") }
+  guard options.is_valid() else {
+    abort("invalid MoonPhaserKit DisplayObjectOptions")
+  }
   self.set_position(options.position)
   self.set_origin(options.origin)
   self.set_scale_xy(options.scale_x, options.scale_y)

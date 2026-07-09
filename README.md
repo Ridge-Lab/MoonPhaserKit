@@ -95,8 +95,9 @@ fn main {
 
 ```bash
 cd examples/moon-jumper-web
-npm install
-npm run dev
+corepack enable
+pnpm install --frozen-lockfile
+pnpm run dev
 ```
 
 打开 Vite 输出的本地地址后，使用方向键左、右、上进行移动和跳跃；在移动端视口可以点击画布触发跳跃。
@@ -109,12 +110,13 @@ npm run dev
 moon check --target js
 moon test --target js
 cd examples/moon-jumper-web
-npm install
-npm run build
-npm run smoke
+corepack enable
+pnpm install --frozen-lockfile
+pnpm run build
+pnpm run smoke
 ```
 
-其中 `npm run smoke` 会启动浏览器检查 Phaser canvas 是否出现、桌面和移动视口是否正常、键盘交互是否可触发，以及页面是否出现 console error 或 HTTP 错误。
+其中 `pnpm run smoke` 会启动浏览器检查 Phaser canvas 是否出现、桌面和移动视口是否正常、键盘交互是否可触发，以及页面是否出现 console error 或 HTTP 错误。
 
 ## API 概览
 

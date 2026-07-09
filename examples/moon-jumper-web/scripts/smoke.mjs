@@ -9,9 +9,44 @@ const server = spawn(process.execPath, [viteCli, "--host", "127.0.0.1", "--port"
 });
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const baseUrl = "http://127.0.0.1:4173";
+let serverFailure = null;
+
+server.on("error", (error) => {
+  serverFailure = error;
+});
+
+server.on("exit", (code, signal) => {
+  if (code && code !== 0) {
+    serverFailure = new Error(`Vite exited with code ${code}`);
+  } else if (signal) {
+    serverFailure = new Error(`Vite exited with signal ${signal}`);
+  }
+});
 
 function isHarmlessMissingResource(url) {
   return url.endsWith("/favicon.ico");
+}
+
+async function waitForServer(url, timeoutMs = 15000) {
+  const start = Date.now();
+  let lastError = null;
+  while (Date.now() - start < timeoutMs) {
+    if (serverFailure) {
+      throw serverFailure;
+    }
+    try {
+      const response = await fetch(url);
+      if (response.status < 500) {
+        return;
+      }
+      lastError = new Error(`${response.status} ${url}`);
+    } catch (error) {
+      lastError = error;
+    }
+    await wait(250);
+  }
+  throw new Error(`Vite server did not become ready: ${lastError?.message ?? "timeout"}`);
 }
 
 async function launchBrowser() {
@@ -27,7 +62,7 @@ async function launchBrowser() {
 }
 
 try {
-  await wait(3000);
+  await waitForServer(baseUrl);
   const browser = await launchBrowser();
   for (const viewport of [
     { width: 1200, height: 780 },
@@ -53,7 +88,7 @@ try {
         browserErrors.push(`${status} ${url}`);
       }
     });
-    await page.goto("http://127.0.0.1:4173", { waitUntil: "load" });
+    await page.goto(baseUrl, { waitUntil: "load" });
     await page.waitForSelector("canvas", { timeout: 10000 });
     await wait(500);
     const box = await page.locator("canvas").boundingBox();

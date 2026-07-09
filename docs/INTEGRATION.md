@@ -8,7 +8,8 @@
 moon check --target js
 moon test --target js
 cd examples/moon-jumper-web
-npm install
+corepack enable
+pnpm install --frozen-lockfile
 ```
 
 Demo 固定使用 Phaser `3.90.0`。如果在新项目里集成，建议先使用相同版本，确认通过后再升级。
@@ -66,11 +67,12 @@ moon build --target js
 ```bash
 moon check --target js
 moon test --target js
-npm run build
-npm run smoke
+cd examples/moon-jumper-web
+pnpm run build
+pnpm run smoke
 ```
 
-`npm run smoke` 会启动浏览器，确认 canvas 出现、桌面和移动视口不溢出、键盘交互可触发、页面无明显运行时错误。
+`pnpm run smoke` 会启动浏览器，确认 canvas 出现、桌面和移动视口不溢出、键盘交互可触发、页面无明显运行时错误。
 
 ## 6. 常见接入问题
 
@@ -98,7 +100,7 @@ globalThis.Phaser = Phaser;
 moon check --target js
 moon test --target js
 cd examples/moon-jumper-web
-npm run build
+pnpm run build
 ```
 
 如果仍为空白，检查浏览器控制台是否有资源路径错误或 `globalThis.Phaser` 未设置。

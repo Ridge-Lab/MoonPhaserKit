@@ -184,4 +184,3 @@ pub fn CameraViewport::is_valid(self : CameraViewport) -> Bool {
 pub fn CameraViewport::size(self : CameraViewport) -> Size2 {
   { width: self.width, height: self.height }
 }
-

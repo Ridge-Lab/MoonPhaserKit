@@ -208,4 +208,3 @@ pub fn TileSpawnPoint::new(
 pub fn TileSpawnPoint::is_valid(self : TileSpawnPoint) -> Bool {
   self.name.length() > 0
 }
-

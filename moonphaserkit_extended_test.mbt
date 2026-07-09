@@ -54,9 +54,7 @@ test "texture and spritesheet assets validate runtime preload data" {
 ///|
 test "atlas audio tilemap and bitmap font descriptors catch missing paths" {
   let atlas = @moonphaserkit.TextureAtlasAsset::new(
-    "ui",
-    "/assets/ui.png",
-    "/assets/ui.json",
+    "ui", "/assets/ui.png", "/assets/ui.json",
   )
   assert_true(atlas.is_valid())
   assert_false(
@@ -71,9 +69,7 @@ test "atlas audio tilemap and bitmap font descriptors catch missing paths" {
   )
   assert_true(
     @moonphaserkit.BitmapFontAsset::new(
-      "score",
-      "/fonts/score.png",
-      "/fonts/score.xml",
+      "score", "/fonts/score.png", "/fonts/score.xml",
     ).is_valid(),
   )
 }
@@ -109,18 +105,9 @@ test "animation frame ranges and repeat mapping match Phaser semantics" {
   let range = @moonphaserkit.FrameRange::new(0, 5)
   assert_true(range.is_valid())
   assert_eq(range.count(), 6)
-  assert_eq(
-    @moonphaserkit.AnimRepeatOnce.to_repeat_count(fixed_count=8),
-    0,
-  )
-  assert_eq(
-    @moonphaserkit.AnimRepeatForever.to_repeat_count(fixed_count=8),
-    -1,
-  )
-  assert_eq(
-    @moonphaserkit.AnimRepeatFixed.to_repeat_count(fixed_count=3),
-    3,
-  )
+  assert_eq(@moonphaserkit.AnimRepeatOnce.to_repeat_count(fixed_count=8), 0)
+  assert_eq(@moonphaserkit.AnimRepeatForever.to_repeat_count(fixed_count=8), -1)
+  assert_eq(@moonphaserkit.AnimRepeatFixed.to_repeat_count(fixed_count=3), 3)
   assert_true(@moonphaserkit.AnimReverse.is_reverse())
   assert_eq(@moonphaserkit.EaseBounceOut.to_phaser_name(), "Bounce.easeOut")
 }
@@ -169,7 +156,9 @@ test "animation play options tween config and state snapshots cover edge cases" 
   assert_true(tween.is_valid())
   let state = @moonphaserkit.AnimationStateSnapshot::new("run", true, 0.5, 3)
   assert_true(state.is_valid())
-  assert_false(@moonphaserkit.AnimationStateSnapshot::new("run", true, 2.0, 3).is_valid())
+  assert_false(
+    @moonphaserkit.AnimationStateSnapshot::new("run", true, 2.0, 3).is_valid(),
+  )
 }
 
 ///|
@@ -224,7 +213,9 @@ test "camera bounds follow fade shake pan and zoom options validate ranges" {
   )
   assert_true(follow.is_valid())
   assert_false(@moonphaserkit.CameraFollowOptions::new(lerp_x=-1.0).is_valid())
-  assert_true(@moonphaserkit.CameraFadeOptions::new(red=255, green=20, blue=0).is_valid())
+  assert_true(
+    @moonphaserkit.CameraFadeOptions::new(red=255, green=20, blue=0).is_valid(),
+  )
   assert_false(@moonphaserkit.CameraFadeOptions::new(red=300).is_valid())
   assert_true(@moonphaserkit.CameraShakeOptions::new(intensity=0.02).is_valid())
   assert_true(
@@ -261,7 +252,9 @@ test "pointer snapshots touch zones and swipe detection cover mobile controls" {
   )
   assert_true(swipe.direction() == @moonphaserkit.SwipeLeft)
   assert_eq(@moonphaserkit.ActionJump.label(), "jump")
-  assert_true(@moonphaserkit.KeyBinding::new(@moonphaserkit.ActionPause, "ESC").is_valid())
+  assert_true(
+    @moonphaserkit.KeyBinding::new(@moonphaserkit.ActionPause, "ESC").is_valid(),
+  )
 }
 
 ///|
@@ -316,7 +309,7 @@ test "tile object spawn points and scene graph options support reusable scenes" 
   let origin = @moonphaserkit.OriginPoint::custom(0.25, 0.75)
   assert_true(origin.is_valid())
   let display = @moonphaserkit.DisplayObjectOptions::new(
-    origin=origin,
+    origin~,
     scale_x=1.2,
     scale_y=1.2,
     depth=10,
@@ -345,7 +338,9 @@ test "physics materials layers lifecycle and spawn specs capture game object con
     physics=platform,
   )
   assert_true(spawn.is_valid())
-  assert_true(spawn.with_layer(@moonphaserkit.LayerUi).layer == @moonphaserkit.LayerUi)
+  assert_true(
+    spawn.with_layer(@moonphaserkit.LayerUi).layer == @moonphaserkit.LayerUi,
+  )
 }
 
 ///|
@@ -406,7 +401,9 @@ test "interaction steps and error path expectations model e2e behavior" {
   assert_false(
     @moonphaserkit.InteractionStep::new(@moonphaserkit.StepPressKey).is_valid(),
   )
-  let tap = @moonphaserkit.InteractionStep::tap(@moonphaserkit.Point2::new(40.0, 40.0))
+  let tap = @moonphaserkit.InteractionStep::tap(
+    @moonphaserkit.Point2::new(40.0, 40.0),
+  )
   assert_true(tap.is_valid())
   assert_eq(@moonphaserkit.StepAssertCanvas.label(), "assert-canvas")
   let expectation = @moonphaserkit.ErrorPathExpectation::new(

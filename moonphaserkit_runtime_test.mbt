@@ -15,9 +15,7 @@ test "text style presets validate scoreboard and dialogue ui" {
 ///|
 test "text styles reject invalid sizing and preserve color updates" {
   assert_false(@moonphaserkit.TextStyle::new(font_size=0).is_valid())
-  assert_false(
-    @moonphaserkit.TextStyle::new(stroke_thickness=-1).is_valid(),
-  )
+  assert_false(@moonphaserkit.TextStyle::new(stroke_thickness=-1).is_valid())
   assert_false(@moonphaserkit.TextStyle::new(fixed_width=-10).is_valid())
   let base = @moonphaserkit.TextStyle::new(color="#ffffff")
   let warning = base.with_color("#facc15")

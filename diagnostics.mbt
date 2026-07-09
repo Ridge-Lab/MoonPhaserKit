@@ -145,4 +145,3 @@ pub fn FfiCallRecord::is_valid(self : FfiCallRecord) -> Bool {
 pub fn FfiCallRecord::failed(self : FfiCallRecord) -> Bool {
   !self.success
 }
-

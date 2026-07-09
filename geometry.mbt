@@ -140,10 +140,7 @@ pub fn Rect::bottom(self : Rect) -> Double {
 
 ///|
 pub fn Rect::center(self : Rect) -> Point2 {
-  {
-    x: self.x + self.width / 2.0,
-    y: self.y + self.height / 2.0,
-  }
+  { x: self.x + self.width / 2.0, y: self.y + self.height / 2.0 }
 }
 
 ///|

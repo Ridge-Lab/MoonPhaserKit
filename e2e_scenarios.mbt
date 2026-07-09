@@ -157,7 +157,14 @@ pub fn BrowserSmokeScenario::new(
   fail_on_console_error? : Bool = true,
   fail_on_http_error? : Bool = true,
 ) -> BrowserSmokeScenario {
-  { name, viewport, canvas, initial_wait_ms, fail_on_console_error, fail_on_http_error }
+  {
+    name,
+    viewport,
+    canvas,
+    initial_wait_ms,
+    fail_on_console_error,
+    fail_on_http_error,
+  }
 }
 
 ///|
@@ -242,21 +249,43 @@ pub fn InteractionScenarioSummary::new(
   covers_audio? : Bool = false,
   covers_camera? : Bool = false,
 ) -> InteractionScenarioSummary {
-  { name, step_count, covers_keyboard, covers_pointer, covers_collision, covers_audio, covers_camera }
+  {
+    name,
+    step_count,
+    covers_keyboard,
+    covers_pointer,
+    covers_collision,
+    covers_audio,
+    covers_camera,
+  }
 }
 
 ///|
-pub fn InteractionScenarioSummary::is_valid(self : InteractionScenarioSummary) -> Bool {
+pub fn InteractionScenarioSummary::is_valid(
+  self : InteractionScenarioSummary,
+) -> Bool {
   self.name.length() > 0 && self.step_count > 0
 }
 
 ///|
-pub fn InteractionScenarioSummary::coverage_score(self : InteractionScenarioSummary) -> Int {
+pub fn InteractionScenarioSummary::coverage_score(
+  self : InteractionScenarioSummary,
+) -> Int {
   let mut score = 0
-  if self.covers_keyboard { score = score + 1 }
-  if self.covers_pointer { score = score + 1 }
-  if self.covers_collision { score = score + 1 }
-  if self.covers_audio { score = score + 1 }
-  if self.covers_camera { score = score + 1 }
+  if self.covers_keyboard {
+    score = score + 1
+  }
+  if self.covers_pointer {
+    score = score + 1
+  }
+  if self.covers_collision {
+    score = score + 1
+  }
+  if self.covers_audio {
+    score = score + 1
+  }
+  if self.covers_camera {
+    score = score + 1
+  }
   score
 }

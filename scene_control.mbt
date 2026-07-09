@@ -23,7 +23,9 @@ pub fn SceneControlAction::label(self : SceneControlAction) -> String {
 }
 
 ///|
-pub fn SceneControlAction::keeps_current_scene(self : SceneControlAction) -> Bool {
+pub fn SceneControlAction::keeps_current_scene(
+  self : SceneControlAction,
+) -> Bool {
   match self {
     SceneLaunch => true
     ScenePause => true

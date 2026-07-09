@@ -49,7 +49,14 @@ pub fn SoundOptions::should_loop(self : SoundOptions) -> Bool {
 
 ///|
 pub fn SoundOptions::muted() -> SoundOptions {
-  { volume: 0.0, rate: 1.0, detune: 0, seek: 0.0, delay_ms: 0, loop_mode: SoundPlayOnce }
+  {
+    volume: 0.0,
+    rate: 1.0,
+    detune: 0,
+    seek: 0.0,
+    delay_ms: 0,
+    loop_mode: SoundPlayOnce,
+  }
 }
 
 ///|
@@ -96,9 +103,7 @@ pub fn AudioFade::new(
 
 ///|
 pub fn AudioFade::is_valid(self : AudioFade) -> Bool {
-  self.from_volume >= 0.0 &&
-  self.to_volume >= 0.0 &&
-  self.duration_ms >= 0
+  self.from_volume >= 0.0 && self.to_volume >= 0.0 && self.duration_ms >= 0
 }
 
 ///|

@@ -35,10 +35,12 @@ fn main {
         bounce_y=0.05,
       ),
     )
-    scene.main_camera().set_bounds(
-      @moonphaserkit.CameraBounds::new(0.0, 0.0, 960.0, 540.0),
-    )
-    scene.main_camera().start_follow(
+    scene
+    .main_camera()
+    .set_bounds(@moonphaserkit.CameraBounds::new(0.0, 0.0, 960.0, 540.0))
+    scene
+    .main_camera()
+    .start_follow(
       p,
       options=@moonphaserkit.CameraFollowOptions::new(
         lerp_x=0.18,

@@ -4,9 +4,13 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: windows-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - name: Install MoonBit
@@ -16,9 +20,14 @@ jobs:
           Invoke-WebRequest -Uri https://cli.moonbitlang.com/install/powershell.ps1 -OutFile install.ps1
           ./install.ps1
           "$env:MOON_HOME\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: pnpm
+          cache-dependency-path: examples/moon-jumper-web/pnpm-lock.yaml
       - name: MoonBit check and test
         run: |
           moon check --target js
@@ -26,10 +35,10 @@ jobs:
       - name: Demo build
         working-directory: examples/moon-jumper-web
         run: |
-          npm install
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
       - name: Browser smoke test
         working-directory: examples/moon-jumper-web
         run: |
-          npx playwright install chromium
-          npm run smoke
+          pnpm exec playwright install chromium
+          pnpm run smoke

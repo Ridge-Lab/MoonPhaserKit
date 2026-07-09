@@ -108,7 +108,16 @@ pub fn AnimationConfig::new(
   yoyo? : Bool = false,
   delay_ms? : Int = 0,
 ) -> AnimationConfig {
-  { key, texture_key, frames, frame_rate, repeat_mode, repeat_count, yoyo, delay_ms }
+  {
+    key,
+    texture_key,
+    frames,
+    frame_rate,
+    repeat_mode,
+    repeat_count,
+    yoyo,
+    delay_ms,
+  }
 }
 
 ///|
@@ -239,4 +248,3 @@ pub fn AnimationStateSnapshot::new(
 pub fn AnimationStateSnapshot::is_valid(self : AnimationStateSnapshot) -> Bool {
   self.progress >= 0.0 && self.progress <= 1.0 && self.frame_index >= 0
 }
-

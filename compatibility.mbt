@@ -6,7 +6,11 @@ pub(all) struct PhaserVersion {
 } derive(Eq, @debug.Debug)
 
 ///|
-pub fn PhaserVersion::new(major : Int, minor : Int, patch : Int) -> PhaserVersion {
+pub fn PhaserVersion::new(
+  major : Int,
+  minor : Int,
+  patch : Int,
+) -> PhaserVersion {
   { major, minor, patch }
 }
 
@@ -114,7 +118,9 @@ pub fn RuntimeCompatibility::is_supported(self : RuntimeCompatibility) -> Bool {
 }
 
 ///|
-pub fn RuntimeCompatibility::support_summary(self : RuntimeCompatibility) -> String {
+pub fn RuntimeCompatibility::support_summary(
+  self : RuntimeCompatibility,
+) -> String {
   "\{self.backend.label()} + Phaser \{self.phaser.to_string()} + \{self.browser.label()}"
 }
 
@@ -233,7 +239,9 @@ pub fn IntegrationChecklist::is_demo_ready(self : IntegrationChecklist) -> Bool 
 }
 
 ///|
-pub fn IntegrationChecklist::is_release_ready(self : IntegrationChecklist) -> Bool {
+pub fn IntegrationChecklist::is_release_ready(
+  self : IntegrationChecklist,
+) -> Bool {
   self.is_demo_ready() && self.smoke_test_passes
 }
 
@@ -254,11 +262,12 @@ pub fn PackagePublicationState::label(self : PackagePublicationState) -> String 
 }
 
 ///|
-pub fn PackagePublicationState::matches_readme(self : PackagePublicationState) -> Bool {
+pub fn PackagePublicationState::matches_readme(
+  self : PackagePublicationState,
+) -> Bool {
   match self {
     PackagePublished => true
     PackagePendingAccount => true
     PackageUnpublished => true
   }
 }
-

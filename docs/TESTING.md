@@ -28,7 +28,7 @@ moon test --target js
 
 ```bash
 cd examples/moon-jumper-web
-npm run smoke
+pnpm run smoke
 ```
 
 测试会：

@@ -68,7 +68,17 @@ pub fn DisplayObjectOptions::new(
   visible? : Bool = true,
   active? : Bool = true,
 ) -> DisplayObjectOptions {
-  { position, origin, scale_x, scale_y, rotation, alpha, depth, visible, active }
+  {
+    position,
+    origin,
+    scale_x,
+    scale_y,
+    rotation,
+    alpha,
+    depth,
+    visible,
+    active,
+  }
 }
 
 ///|
@@ -80,7 +90,9 @@ pub fn DisplayObjectOptions::is_valid(self : DisplayObjectOptions) -> Bool {
 }
 
 ///|
-pub fn DisplayObjectOptions::hidden(self : DisplayObjectOptions) -> DisplayObjectOptions {
+pub fn DisplayObjectOptions::hidden(
+  self : DisplayObjectOptions,
+) -> DisplayObjectOptions {
   {
     position: self.position,
     origin: self.origin,
@@ -138,12 +150,26 @@ pub fn PhysicsMaterial::new(
 
 ///|
 pub fn PhysicsMaterial::platform() -> PhysicsMaterial {
-  { kind: MaterialDefault, bounce_x: 0.0, bounce_y: 0.0, gravity_y: 0.0, immovable: true, sensor: false }
+  {
+    kind: MaterialDefault,
+    bounce_x: 0.0,
+    bounce_y: 0.0,
+    gravity_y: 0.0,
+    immovable: true,
+    sensor: false,
+  }
 }
 
 ///|
 pub fn PhysicsMaterial::pickup() -> PhysicsMaterial {
-  { kind: MaterialSensor, bounce_x: 0.0, bounce_y: 0.0, gravity_y: 0.0, immovable: false, sensor: true }
+  {
+    kind: MaterialSensor,
+    bounce_x: 0.0,
+    bounce_y: 0.0,
+    gravity_y: 0.0,
+    immovable: false,
+    sensor: true,
+  }
 }
 
 ///|
@@ -152,7 +178,9 @@ pub fn PhysicsMaterial::is_valid(self : PhysicsMaterial) -> Bool {
 }
 
 ///|
-pub fn PhysicsMaterial::to_sprite_options(self : PhysicsMaterial) -> SpriteOptions {
+pub fn PhysicsMaterial::to_sprite_options(
+  self : PhysicsMaterial,
+) -> SpriteOptions {
   SpriteOptions::new(
     immovable=self.immovable,
     bounce_x=self.bounce_x,
@@ -213,7 +241,14 @@ pub fn SceneLayerConfig::new(
 ) -> SceneLayerConfig {
   let final_name = if name.length() > 0 { name } else { kind.label() }
   let final_depth = if depth == 0 { kind.default_depth() } else { depth }
-  { kind, name: final_name, depth: final_depth, scroll_factor_x, scroll_factor_y, visible }
+  {
+    kind,
+    name: final_name,
+    depth: final_depth,
+    scroll_factor_x,
+    scroll_factor_y,
+    visible,
+  }
 }
 
 ///|
@@ -269,13 +304,14 @@ pub fn SpawnSpec::new(
 
 ///|
 pub fn SpawnSpec::is_valid(self : SpawnSpec) -> Bool {
-  self.key.length() > 0 &&
-  self.display.is_valid() &&
-  self.physics.is_valid()
+  self.key.length() > 0 && self.display.is_valid() && self.physics.is_valid()
 }
 
 ///|
-pub fn SpawnSpec::with_layer(self : SpawnSpec, layer : SceneLayerKind) -> SpawnSpec {
+pub fn SpawnSpec::with_layer(
+  self : SpawnSpec,
+  layer : SceneLayerKind,
+) -> SpawnSpec {
   {
     key: self.key,
     position: self.position,
@@ -309,4 +345,3 @@ pub fn SceneTransition::is_valid(self : SceneTransition) -> Bool {
   self.to_scene.length() > 0 &&
   self.fade.is_valid()
 }
-
