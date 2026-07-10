@@ -19,7 +19,7 @@ MoonPhaserKit 是面向 MoonBit JavaScript 后端的 Phaser 3 轻量游戏开发
 
 - 源码规模从早期轻量原型扩展到 4k+ 行 MoonBit 源码，新增动画、音频、相机、Tilemap、触控、场景控制、时间事件、UI 文本样式、兼容性模型和诊断模型。
 - 测试从基础配置测试扩展为 40 个 MoonBit 测试用例，并保留浏览器 smoke test，覆盖配置、资源、动画、音频、相机、Tilemap、触控、错误路径、交互场景和新增运行时模型。
-- README 已改为源码验收、Mooncakes 包元数据和比赛提交分别说明，避免产生提交物未完成的印象。
+- README 已改为源码验收、Mooncakes 发布状态和比赛提交分别说明，避免产生提交物未完成的印象。
 - 文档补充 API 示例、版本兼容、项目集成、测试方式和提交检查清单。
 
 ## 安装与使用
@@ -33,16 +33,19 @@ moon check --target js
 moon test --target js
 ```
 
-Mooncakes 方式用于包索引和依赖安装验收。当前模块名配置为 `Ridge-Lab/moonphaserkit`；发布或更新当前版本时，请确认 `moon.mod` 中 `/` 前面的 owner 与实际 Mooncakes 用户名一致，然后执行：
+Mooncakes 方式用于包索引和依赖安装验收。当前版本已发布为 `Ridge-Lab/moonphaserkit`：
 
-```bash
-moon publish
-```
-
-发布成功后，其他项目可以使用对应包名安装，例如：
+- Mooncakes 包地址：https://mooncakes.io/docs/#/Ridge-Lab/moonphaserkit
+- 安装命令：
 
 ```bash
 moon add Ridge-Lab/moonphaserkit
+```
+
+维护者发布新版本时，请确认 `moon.mod` 中 `/` 前面的 owner 与实际 Mooncakes 用户名一致，然后执行：
+
+```bash
+moon publish
 ```
 
 宿主网页需要安装 Phaser，并在加载 MoonBit 生成的 JavaScript 前暴露全局对象：
@@ -157,5 +160,6 @@ pnpm run smoke
 
 - GitHub 仓库：https://github.com/Ridge-Lab/MoonPhaserKit.git
 - GitLink 仓库：https://gitlink.org.cn/RidgeLab/MoonPhaserKit
+- Mooncakes 包：https://mooncakes.io/docs/#/Ridge-Lab/moonphaserkit
 - 项目性质：原创 MoonBit 生态绑定项目，不移植已有开源项目源码。
 - 许可证：MIT。

@@ -6,6 +6,7 @@
 
 - GitHub：https://github.com/Ridge-Lab/MoonPhaserKit
 - GitLink：https://gitlink.org.cn/RidgeLab/MoonPhaserKit
+- Mooncakes：https://mooncakes.io/docs/#/Ridge-Lab/moonphaserkit
 - 两边仓库均应公开可访问。
 - GitLink 应从 GitHub 镜像同步，提交后确认最新 commit 一致。
 - 提交记录保持 10-20 个有效 commits，不使用空提交、重复提交或无意义拆分。
@@ -52,7 +53,13 @@ license = "MIT"
 preferred_target = "js"
 ```
 
-提交前请登录 Mooncakes 并执行发布或更新。如果实际 Mooncakes 用户名不是 `Ridge-Lab`，请先把 `name` 中 `/` 前面的 owner 改成真实 Mooncakes 用户名：
+当前版本 `0.3.0` 已发布到 Mooncakes：
+
+```text
+https://mooncakes.io/docs/#/Ridge-Lab/moonphaserkit
+```
+
+维护者发布新版本时，如果实际 Mooncakes 用户名不是 `Ridge-Lab`，请先把 `name` 中 `/` 前面的 owner 改成真实 Mooncakes 用户名：
 
 ```bash
 moon publish
@@ -65,4 +72,4 @@ moon publish
 - GitHub 仓库链接
 - GitLink 仓库链接
 - 一页 PDF 申报书
-- Mooncakes 包地址；如果提交系统要求填写，请使用发布成功后的实际包页面
+- Mooncakes 包地址：https://mooncakes.io/docs/#/Ridge-Lab/moonphaserkit
